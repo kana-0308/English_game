@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <!-- スタート画面 -->
+     <!--hello-->
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
       <button @click="() => {isStarted = true}">START</button>
