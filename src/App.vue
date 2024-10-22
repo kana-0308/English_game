@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <!--aaaaaaaaaaaaaaaaaaaaa-->
+    <!--aaaaaaahhhhhhaaa-->
     <!-- スタート画面 -->
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
