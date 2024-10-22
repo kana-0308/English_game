@@ -1,0 +1,15 @@
+{
+    "quizzes": [
+      {
+        "image": "/image/apple.jpg",
+        "words": ["apple", "banana", "orange", "grape"],
+        "correctIndex": 0
+      },
+      {
+        "image": "/image/cat.jpg",
+        "words": ["dog", "cat", "bird", "fish"],
+        "correctIndex": 1
+      }
+    ]
+  }
+  
