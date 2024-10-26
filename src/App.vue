@@ -1,5 +1,3 @@
-<!-- test20241022 -->
-<!-- TEST20241022 -->
 <template>
   <div class="main">
     <!-- スタート画面 -->
