@@ -41,6 +41,13 @@
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-else>
+<<<<<<< Updated upstream
+=======
+        <button class="next-button" @click="checkAnswer">
+          {{ buttonTextN }}
+        </button>
+
+>>>>>>> Stashed changes
       </div>
     </div>
   </div>
@@ -143,6 +150,12 @@ onMounted(() => {
 /* メインボタン */
 .main-button {
   background-color: #007bff;
+  color: white;
+}
+
+/*次の問題へいくボタン*/
+.next-button {
+  background-color: green;
   color: white;
 }
 </style>
