@@ -1,7 +1,7 @@
 {
     "quizzes": [
       {
-        "image": "/image/apple.png",
+        "image": "/image/apple.jpg",
         "words": ["apple", "banana", "kiwi", "grape"],
         "correctIndex": 0,
         "width": 200,
@@ -22,9 +22,11 @@
         "height":150
       },
       {
-        "image": "",
+        "image": "/image/lemon.jpg",
         "words": ["dragonfruit", "pineapple", "orange", "lemon"],
-        "correctIndex": 3
+        "correctIndex": 3,
+        "width":200, 
+        "height":200
       },
       {
         "image": "",
