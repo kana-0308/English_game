@@ -125,23 +125,62 @@ onMounted(() => {
 
 /* 選択候補の単語をきれいに並べる */
 .word-options {
+  margin-left: 30%;
+  margin-right: 30%;
+  height: 125px;
+
   display: flex;
   justify-content: center;
+  justify-content: space-between;
 }
 
 /* 単語のボタンのデザイン */
 .word-options button {
-  
+  width: 150px;
+  background-color: #efefef;
+  color: #000000;
+
+  border-radius: 100px;
+  border: 2px solid #ffacac;
+}
+
+.word-options button:hover{
+  background-color: #dddddd;
+  color: black;
+  border: dashed #ffacac;
+}
+
+.word-options button:focus{
+  background-color: #ffacac;
+  color: black;
+  border: 0;
 }
 
 /* 選択した場合のボタンのデザイン */
 .word-options button.selected {
-
+  background-color: #ffa7a7;
+  color: black;
 }
 
 /* メインボタン */
 .main-button {
   background-color: #007bff;
   color: white;
+
+  border: 2px solid #cccc00;
+}
+
+.main-button:hover{
+  background-color: #007bff;
+  color: white;
+
+  border: 5px ridge #ffff80;
+}
+
+.main-button:focus{
+  background-color: #007bff;
+  color: white;
+
+  border: 5px ridge #ffff00;
 }
 </style>
