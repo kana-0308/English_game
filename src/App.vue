@@ -16,14 +16,14 @@
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
-        <img alt="quiz image"/>
+        <img :src="currentQuiz.image"  width="200" height="200" alt="quiz image">
 
         <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
         <div class="word-options">
           <button 
             v-for="(word, index) in currentQuiz.words" 
             :key="index" 
-            @click="seletWord()"
+            @click="selectWord()"
           >
             {{ word }}
           </button>
