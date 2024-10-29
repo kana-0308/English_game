@@ -13,11 +13,12 @@
       <div class="progress-bar">
         <div class="progress"></div>
       </div>
+      <h1>画像に合う単語を選択してください。</h1>
 
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
-        <img alt="quiz image"/>
+        <img/>
 
         <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
         <div class="word-options">
@@ -52,7 +53,7 @@
 
 
 
-<script setup>
+<script setup>//Javascript
 import { ref, onMounted, computed } from 'vue';
 
 // クイズデータの集合オブジェクト（構造体）
@@ -109,7 +110,7 @@ onMounted(() => {
 
 
 
-<style scoped>
+<style scoped>/*CSS */
 
 /* メインコンテンツであるクイズのデザイン */
 .main {
