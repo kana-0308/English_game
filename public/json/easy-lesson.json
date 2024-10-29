@@ -1,19 +1,25 @@
 {
     "quizzes": [
       {
-        "image": "/image/highperson.png",
+        "image": "/image/apple.png",
         "words": ["apple", "banana", "kiwi", "grape"],
-        "correctIndex": 0
+        "correctIndex": 0,
+        "width": 200,
+        "height": 200
       },
       {
         "image": "/image/cat.jpg",
         "words": ["dog", "cat", "bird", "fish"],
-        "correctIndex": 1
+        "correctIndex": 1,
+        "width":200,
+        "height":200
       },
       {
-        "image": "",
+        "image": "/image/bus.jpg",
         "words": ["car", "taxi", "bus", "train"],
-        "correctIndex": 2 
+        "correctIndex": 2,
+        "width":200, 
+        "height":150
       },
       {
         "image": "",
