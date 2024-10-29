@@ -92,6 +92,9 @@ function checkAnswer() {
 
   // 次の問題に移る
   currentIndex.value++
+
+  // 単語の選択をリセット
+  selectedWordIndex.value = null
 }
 
 
