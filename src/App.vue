@@ -31,7 +31,7 @@
         </div>
 
         <!-- 答え合わせの時に出てくるメッセージ -->
-        <div>{{ undefined }}</div>
+        <div>{{ collectText }}</div>
 
         <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
@@ -68,6 +68,7 @@ const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonText = ref('Check');  // 確認ボタンのテキスト
+const collectText = ref('Excellent!!');
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
