@@ -11,7 +11,7 @@
     <div v-else>
       <!-- 未実装:進捗がどれくらい進んでいるか確認するバー -->
       <div class="progress-bar">
-        <div class="progress"></div>
+        <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
       </div>
       <h1>画像に合う単語を選択してください。</h1>
 
@@ -79,6 +79,9 @@ const collectText = ref('Excellent!!')
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
+
+// computed関数によりバーの更新
+const progressPercentage = computed(() => (currentIndex.value / totalQuizzes.value) * 100)
 
 
 // 未実装:単語をクリックしたときに選択
