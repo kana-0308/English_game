@@ -26,6 +26,7 @@
             v-for="(word, index) in currentQuiz.words" 
             :key="index" 
             @click="seletWord(index)"
+            v-bind:class="{ selected: selectedWordIndex === index }"
           >
             {{ word }}
           </button>
