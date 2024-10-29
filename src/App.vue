@@ -18,7 +18,7 @@
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
-        <img :src="currentQuiz.image"  width="200" height="200" alt="quiz image">
+        <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
         <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
         <div class="word-options">
