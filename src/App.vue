@@ -24,7 +24,7 @@
           <button 
             v-for="(word, index) in currentQuiz.words" 
             :key="index" 
-            @click="seletWord()"
+            @click="seletWord(index)"
           >
             {{ word }}
           </button>
@@ -74,14 +74,16 @@ const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 
 
 // 未実装:単語をクリックしたときに選択
-function seletWord() {
-  // selectedWordIndexを更新 以下の処理はテスト用なので消していい
+function seletWord(index) {
+  selectedWordIndex.value = index
   console.log(selectedWordIndex.value)
 }
 
 // 未実装:メインボタンを押したときの処理
 function checkAnswer() {
-  
+
+  // 次の問題に移る
+  currentIndex.value++
 }
 
 
