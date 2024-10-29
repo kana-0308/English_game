@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-    <!--aaaaaaahhhhhhaaa-->
     <!-- スタート画面 -->
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
@@ -35,12 +34,16 @@
 
         <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
-          {{ buttonText }}
+          {{ buttonTextC }}
         </button>
+
       </div>
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-else>
+        <button class="main-button" @click="checkAnswer">
+          {{ buttonTextN }}
+        </button>
       </div>
     </div>
   </div>
@@ -67,7 +70,8 @@ const isStarted = ref(false)  // クイズが始まっているかどうかの�
 const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
-const buttonText = ref('Check');  // 確認ボタンのテキスト
+const buttonTextC = ref('Check');  // 確認ボタンのテキスト
+const buttonTextN = ref('Next')  //次の問題へのボタンのテキスト
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
