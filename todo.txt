@@ -39,8 +39,8 @@ o(A)クイズの四択制作
     (B)正解した数やスコアの表示
 }
 (A)単語を選択した場合にマークアップされる（デザインはCSSが担当） {
-    (A)内部のデータである変数selectedWordIndexを更新する関数selectWordを実装
-    (B)Vue.jsの v-bind:class="" を用いてCSSで定義されたクラスselectedに動的に変化
+    o(A)内部のデータである変数selectedWordIndexを更新する関数selectWordを実装
+    o(B)Vue.jsの v-bind:class="" を用いてCSSで定義されたクラスselectedに動的に変化
 }
 (C)次の問題に移るときのアニメーション
 (C)スキップボタンの実装 {
