@@ -13,18 +13,19 @@
       <div class="progress-bar">
         <div class="progress"></div>
       </div>
+      <h1>画像に合う単語を選択してください。</h1>
 
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
-        <img alt="quiz image"/>
+        <img/>
 
         <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
         <div class="word-options">
           <button 
             v-for="(word, index) in currentQuiz.words" 
             :key="index" 
-            @click="seletWord()"
+            @click="seletWord(index)"
           >
             {{ word }}
           </button>
@@ -35,12 +36,16 @@
 
         <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
-          {{ buttonText }}
+          {{ buttonTextC }}
         </button>
+
       </div>
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-else>
+        <button class="main-button" @click="checkAnswer">
+          {{ buttonTextN }}
+        </button>
       </div>
     </div>
   </div>
@@ -48,7 +53,7 @@
 
 
 
-<script setup>
+<script setup>//Javascript
 import { ref, onMounted, computed } from 'vue';
 
 // クイズデータの集合オブジェクト（構造体）
@@ -68,21 +73,24 @@ const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonText = ref('Check');  // 確認ボタンのテキスト
-const collectText = ref('Excellent!!');
+const buttonTextN = ref('Next')
+const collectText = ref('Excellent!!')
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 
 
 // 未実装:単語をクリックしたときに選択
-function seletWord() {
-  // selectedWordIndexを更新 以下の処理はテスト用なので消していい
+function seletWord(index) {
+  selectedWordIndex.value = index
   console.log(selectedWordIndex.value)
 }
 
 // 未実装:メインボタンを押したときの処理
 function checkAnswer() {
-  
+
+  // 次の問題に移る
+  currentIndex.value++
 }
 
 
@@ -103,7 +111,7 @@ onMounted(() => {
 
 
 
-<style scoped>
+<style scoped>/*CSS */
 
 /* メインコンテンツであるクイズのデザイン */
 .main {

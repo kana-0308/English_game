@@ -1,15 +1,268 @@
 {
     "quizzes": [
       {
-        "image": "/image/apple.jpg",
-        "words": ["apple", "banana", "orange", "grape"],
+        "image": "/image/highperson.png",
+        "words": ["apple", "banana", "kiwi", "grape"],
         "correctIndex": 0
       },
       {
         "image": "/image/cat.jpg",
         "words": ["dog", "cat", "bird", "fish"],
         "correctIndex": 1
+      },
+      {
+        "image": "",
+        "words": ["car", "taxi", "bus", "train"],
+        "correctIndex": 2 
+      },
+      {
+        "image": "",
+        "words": ["dragonfruit", "pineapple", "orange", "lemon"],
+        "correctIndex": 3
+      },
+      {
+        "image": "",
+        "words": ["lion", "elephant", "parrot", "grasshopper"],
+        "correctIndex": 0
+      },
+      {
+        "image": "",
+        "words": ["airplane", "bike", "truck", "police car"],
+        "correctIndex": 1
+      },
+      {
+        "image": "",
+        "words": ["ambulance", "tractor", "boat", "ship"],
+        "correctIndex": 2
+      },
+      {
+        "image": "",
+        "words": ["helicopter", "tricycle", "raft", "rocket"],
+        "correctIndex": 3
+      },
+      {
+        "image": "",
+        "words": ["send", "go", "let", "gram"],
+        "correctIndex":1
+      },
+      {
+        "image": "",
+        "words": ["crime", "do", "just", "come"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["degree", "keep", "bring", "gain"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["woman", "take", "destroy", "pet"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["sacrifice", "sort", "drive", "grant"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["read", "run", "second", "park"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["put", "cute", "judge", "settle"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["carry", "eliminate", "ban", "derive"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["estimate", "control", "admire", "leave"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["date", "sax", "reach", "sensus"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["cry", "alive", "tech", "arrive"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["pass", "through", "tongue", "apply"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["being", "end", "become", "red"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["bring", "grow", "app", "peach"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["section", "tool", "site", "develop"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["increase", "up", "middle", "seat"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["decrease", "data", "depression", "song"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["lead", "negative", "gravity", "extend"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["neat", "expand", "pretty", "semester"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["road", "often", "spread", "wide"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["junk", "ghost", "look", "keen"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["jewel", "watch", "sea", "flower"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["toy", "go", "city", "see"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["caribou", "hear", "ear", "disc"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["lady", "listen", "candy", "fever"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["taste", "black", "sheep", "bus"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["neck", "heart", "smell", "book"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["dance", "bird", "pop", "feel"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["live", "dead", "youth", "think"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["mad", "brain", "head", "believe"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["love", "wood", "doll", "consider"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["little", "small", "suppose", "kitchen"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["know", "maria", "flower", "storm"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["ocean", "speak", "fish", "heavy"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["rainy", "talk", "clear", "annoy"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["eye", "happy", "tell", "lie"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["say", "cat", "toxic", "hundred"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["boy", "night", "monster", "have"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["karma", "donut", "get", "hole"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["believer", "light", "gather", "retry"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["movie", "collect", "wall", "flower"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["my", "will", "name", "catch"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["grab", "under", "cover", "neon"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["take", "sign", "break", "up"],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["rain", "street", "make", "insect"],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["gray", "generate", "song", "hope"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["land", "blue", "jasmine", "build"],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["downtown", "construct", "call", "aether"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["life", "form", "fruit", "amen"],
+        "correctIndex": 1
+      },  {
+        "image": "",
+        "words": ["", "", "", ""],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["", "", "", ""],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["", "", "", ""],
+        "correctIndex": 2
+      },  {
+        "image": "",
+        "words": ["", "", "", ""],
+        "correctIndex": 3
+      },  {
+        "image": "",
+        "words": ["", "", "", ""],
+        "correctIndex": 0
+      },  {
+        "image": "",
+        "words": ["", "", "", ""],
+        "correctIndex": 2
       }
+   
     ]
   }
   
