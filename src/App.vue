@@ -4,6 +4,18 @@
      <!--hello-->
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
+      <!--問題数変えるところ できたら10刻みから選ぶんじゃなくて自分で入力できるようにしたい-->
+      <h3>チャレンジする問題数を入力してください</h3>
+      <select v-model.number="totalQuizzes">
+        <option>2</option> <!--検証用-->
+        <option>10</option>
+        <option>20</option>
+        <option>30</option>
+        <option>40</option>
+        <option>50</option>
+        <option>60</option>
+      </select>
+
       <button @click="() => {isStarted = true}">START</button>
     </div>
 
