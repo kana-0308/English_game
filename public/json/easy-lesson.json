@@ -29,34 +29,46 @@
         "height":200
       },
       {
-        "image": "",
+        "image": "/image/lion.jpg",
         "words": ["lion", "elephant", "parrot", "grasshopper"],
-        "correctIndex": 0
+        "correctIndex": 0,
+        "width":200,
+        "height":200
       },
       {
-        "image": "",
+        "image": "/image/bike.jpg",
         "words": ["airplane", "bike", "truck", "police car"],
-        "correctIndex": 1
+        "correctIndex": 1,
+        "width":200,
+        "height":200
       },
       {
-        "image": "",
+        "image": "/image/boat.jpg",
         "words": ["ambulance", "tractor", "boat", "ship"],
-        "correctIndex": 2
+        "correctIndex": 2,
+        "width":200,
+        "height":150
       },
       {
-        "image": "",
+        "image": "/image/rocket.jpg",
         "words": ["helicopter", "tricycle", "raft", "rocket"],
-        "correctIndex": 3
+        "correctIndex": 3,
+        "width":200,
+        "height":200
       },
       {
-        "image": "",
+        "image": "/image/go.jpg",
         "words": ["send", "go", "let", "gram"],
-        "correctIndex":1
+        "correctIndex":1,
+        "width":200,
+        "height":150
       },
       {
-        "image": "",
+        "image": "/image/come.jpg",
         "words": ["crime", "do", "just", "come"],
-        "correctIndex": 3
+        "correctIndex": 3,
+        "width":200,
+        "height":150
       },  {
         "image": "",
         "words": ["degree", "keep", "bring", "gain"],
