@@ -30,6 +30,14 @@
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
+        
+        <script>
+           window.onbeforeunload = function(event) {
+           var message = 'このページを離れますか？';
+           event.returnValue = message; // 古いブラウザ用
+           return message;
+           };
+        </script>
 
         <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
@@ -88,7 +96,7 @@ const currentIndex = ref(0);  // 現在学習しているクイズの識別番�
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonText = ref('Check');  // 確認ボタンのテキスト
 const buttonTextN = ref('Next')
-const collectText = ref('Excellent!!')
+const collectText = ref('Excellent!!') // 正解時に出る文字
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
@@ -96,6 +104,12 @@ const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 // computed関数によりバーの更新
 const progressPercentage = computed(() => (currentIndex.value / totalQuizzes.value) * 100)
 
+// ページ離脱時の警告ポップ
+window.onbeforeunload = function(event) {
+  var message = 'このページを離れますか？';
+  event.returnValue = message; // 古いブラウザ用
+  return message;
+};
 
 // 未実装:単語をクリックしたときに選択
 function seletWord(index) {
