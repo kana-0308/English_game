@@ -30,14 +30,6 @@
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
-        
-        <script>
-           window.onbeforeunload = function(event) {
-           var message = 'このページを離れますか？';
-           event.returnValue = message; // 古いブラウザ用
-           return message;
-           };
-        </script>
 
         <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
