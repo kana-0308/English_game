@@ -4,6 +4,9 @@
      <!--hello-->
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
+      <h3>チャレンジする問題数を入力してください</h3>
+      <input type="number" value="0" v-model="totalQuizzes" />
+
       <button @click="() => {isStarted = true}">START</button>
     </div>
 
@@ -13,11 +16,13 @@
       <div class="progress-bar">
         <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
       </div>
-      <h1>画像に合う単語を選択してください。</h1>
+      
 
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
+
+        <h1>画像に合う単語を選んでください。</h1>
         <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
         <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
@@ -33,7 +38,7 @@
         </div>
 
         <!-- 答え合わせの時に出てくるメッセージ -->
-        <div>{{ collectText }}</div>
+        <!--<div>{{ collectText }}</div> ←クソデカExcellent-->
 
         <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
@@ -44,9 +49,10 @@
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-else>
-        <button class="main-button" @click="checkAnswer">
+        <h3>かかった時間は</h3>
+        <!-- <button class="main-button" @click="checkAnswer">
           {{ buttonTextN }}
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -75,7 +81,8 @@ const currentIndex = ref(0);  // 現在学習しているクイズの識別番�
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonTextC = ref('Check');  // 確認ボタンのテキスト
 const buttonTextN = ref('Next')
-const collectText = ref('Excellent!!')
+const collectText = ref('Excellent!!') // 正解時に出る文字
+
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
@@ -83,6 +90,12 @@ const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 // computed関数によりバーの更新
 const progressPercentage = computed(() => currentIndex.value >= totalQuizzes.value ? 100 : (currentIndex.value / totalQuizzes.value) * 100)
 
+// ページ離脱時の警告ポップ
+window.onbeforeunload = function(event) {
+  var message = 'このページを離れますか？';
+  event.returnValue = message; // 古いブラウザ用
+  return message;
+};
 
 // 未実装:単語をクリックしたときに選択
 function seletWord(index) {
@@ -127,17 +140,19 @@ onMounted(() => {
 
 /* 空っぽの進捗バー（全体） */
 .progress-bar {
-  height: 20px;
+  height: 30px;
   background-color: #ddd;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+  border-radius:10px;
 }
 
 /* 実際の進捗バー（長さが変わるところ） */
 .progress {
   height: 100%;
   background-color: #4caf50;
+  border-radius:10px;
 }
 
 /* 選択候補の単語をきれいに並べる */
@@ -183,21 +198,23 @@ onMounted(() => {
 .main-button {
   background-color: #007bff;
   color: white;
+  width: 250px;
+  height: 100px;
 
-  border: 2px solid #cccc00;
+  border: 5px solid #cccc00;
 }
 
 .main-button:hover{
   background-color: #007bff;
   color: white;
 
-  border: 5px ridge #ffff80;
+  border: 10px ridge #ffff80;
 }
 
 .main-button:focus{
   background-color: #007bff;
   color: white;
 
-  border: 5px ridge #ffff00;
+  border: 10px ridge #ffff00;
 }
 </style>
