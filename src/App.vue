@@ -85,7 +85,7 @@ const buttonTextN = ref('Next')
 const correctText = ref(undefined)
 const incorrectText = ref('False.')
 const correctAnswer = ref(undefined)
-currentQuiz.correctIndex.value
+//currentQuiz.correctIndex.value
 
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
@@ -109,11 +109,11 @@ function seletWord(index) {
 
 // 未実装:メインボタンを押したときの処理
 function checkAnswer() {
-  if(selectetWordIndex.value==currentQuiz.correctIndex.value)
+  if(selectedWordIndex.value==currentQuiz.value.correctIndex)
    correctText.value='Excellent!!'
   else{
   correctText.value=incorrectText.value
-  correctAnswer.value=currentQuiz.word[currentQuiz.correctIndex.value]
+  correctAnswer.value=currentQuiz.value.word[currentQuiz.value.correctIndex]
   }
    
    correctText.value=undefined
