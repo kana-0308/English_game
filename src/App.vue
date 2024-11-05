@@ -230,13 +230,8 @@ onMounted(() => {
   border: 10px ridge #ffff00;
 }
 
-.start-input{
-  background-color: #f1f1f1;
-  width: 250px;
-  height: 100px;
-}
-
 .start-button{
+  position: relative;
   background-color: #fd90ff;
   color: #000000;
 
@@ -253,5 +248,14 @@ onMounted(() => {
 .start-button:focus{
   background-color: #feadff;
   border: 5px solid #fbfb33;
+}
+
+.start-input{
+  background-color: #f1f1f1;
+  font-size: 50px;
+  width: 150px;
+  height: 70px;
+  position: relative;
+  top: 15px;
 }
 </style>
