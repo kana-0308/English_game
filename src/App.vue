@@ -81,7 +81,17 @@ const collectText = ref('Excellent!!')
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 
 // computed関数によりバーの更新
-const progressPercentage = computed(() => (currentIndex.value / totalQuizzes.value) * 100)
+const progressPercentage = computed(updateBar())
+
+// バーの更新の処理
+function updateBar() {
+  // すべての問題を解き終わったら、
+  if (currentIndex.value >= totalQuizzes.value) {
+    return 100
+  }
+  // 解き終わってないなら、パーセントを返す
+  else return (currentIndex.value / totalQuizzes.value) * 100
+}
 
 
 // 未実装:単語をクリックしたときに選択
