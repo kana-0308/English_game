@@ -16,12 +16,13 @@
       <div class="progress-bar">
         <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
       </div>
-      <h1>画像に合う単語を選択してください。</h1>
+      
 
 
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzes">
 
+        <h1>画像に合う単語を選んでください。</h1>
         <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
         <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
@@ -48,9 +49,10 @@
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-else>
-        <button class="main-button" @click="checkAnswer">
+        <h3>かかった時間は</h3>
+        <!-- <button class="main-button" @click="checkAnswer">
           {{ buttonTextN }}
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -80,6 +82,7 @@ const selectedWordIndex = ref(null);  // 選択している単語
 const buttonText = ref('Check');  // 確認ボタンのテキスト
 const buttonTextN = ref('Next')
 const collectText = ref('Excellent!!') // 正解時に出る文字
+
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
