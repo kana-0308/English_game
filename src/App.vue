@@ -5,9 +5,9 @@
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
       <h3>チャレンジする問題数を入力してください</h3>
-      <input type="number" value="0" v-model="totalQuizzes" />
+      <input class="start-input" type="number" value="0" v-model="totalQuizzes" />
 
-      <button @click="() => {isStarted = true}">START</button>
+      <button class="start-button" @click="() => {isStarted = true}">START</button>
     </div>
 
 
@@ -196,6 +196,10 @@ onMounted(() => {
 
 /* メインボタン */
 .main-button {
+  position: fixed;
+  bottom: 75px;
+  right: 100px;
+
   background-color: #007bff;
   color: white;
   width: 250px;
@@ -205,16 +209,35 @@ onMounted(() => {
 }
 
 .main-button:hover{
-  background-color: #007bff;
-  color: white;
-
   border: 10px ridge #ffff80;
 }
 
 .main-button:focus{
-  background-color: #007bff;
-  color: white;
-
   border: 10px ridge #ffff00;
+}
+
+.start-input{
+  background-color: #f1f1f1;
+  width: 250px;
+  height: 100px;
+}
+
+.start-button{
+  background-color: #fd90ff;
+  color: #000000;
+
+  border-radius: 50px;
+  width: 250px;
+  height: 100px;
+
+  border: 5px solid #cccc00;
+}
+.start-button:hover{
+  background-color: #feadff;
+  border: 5px solid #fbfb33;
+}
+.start-button:focus{
+  background-color: #feadff;
+  border: 5px solid #fbfb33;
 }
 </style>
