@@ -73,7 +73,7 @@ const isStarted = ref(false)  // クイズが始まっているかどうかの�
 const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
-const buttonText = ref('Check');  // 確認ボタンのテキスト
+const buttonTextC = ref('Check');  // 確認ボタンのテキスト
 const buttonTextN = ref('Next')
 const collectText = ref('Excellent!!')
 
@@ -81,17 +81,7 @@ const collectText = ref('Excellent!!')
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 
 // computed関数によりバーの更新
-const progressPercentage = computed(updateBar())
-
-// バーの更新の処理
-function updateBar() {
-  // すべての問題を解き終わったら、
-  if (currentIndex.value >= totalQuizzes.value) {
-    return 100
-  }
-  // 解き終わってないなら、パーセントを返す
-  else return (currentIndex.value / totalQuizzes.value) * 100
-}
+const progressPercentage = computed(() => currentIndex.value >= totalQuizzes.value ? 100 : (currentIndex.value / totalQuizzes.value) * 100)
 
 
 // 未実装:単語をクリックしたときに選択
