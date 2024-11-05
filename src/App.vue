@@ -38,7 +38,8 @@
         </div>
 
         <!-- 答え合わせの時に出てくるメッセージ -->
-        <!--<div>{{ collectText }}</div> ←クソデカExcellent-->
+        <div>{{ correctText }}</div>
+        <div>{{ correctAnswer }}</div>
 
         <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
@@ -81,7 +82,10 @@ const currentIndex = ref(0);  // 現在学習しているクイズの識別番�
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonTextC = ref('Check');  // 確認ボタンのテキスト
 const buttonTextN = ref('Next')
-const collectText = ref('Excellent!!') // 正解時に出る文字
+const correctText = ref(undefined)
+const incorrectText = ref('False.')
+const correctAnswer = ref(undefined)
+currentQuiz.correctIndex.value
 
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
@@ -105,6 +109,16 @@ function seletWord(index) {
 
 // 未実装:メインボタンを押したときの処理
 function checkAnswer() {
+  if(selectetWordIndex.value==currentQuiz.correctIndex.value)
+   correctText.value='Excellent!!'
+  else{
+  correctText.value=incorrectText.value
+  correctAnswer.value=currentQuiz.word[currentQuiz.correctIndex.value]
+  }
+   
+   correctText.value=undefined
+
+   
 
   // 次の問題に移る
   currentIndex.value++
