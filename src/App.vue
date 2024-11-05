@@ -5,7 +5,7 @@
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
       <h3>チャレンジする問題数を入力してください</h3>
-      <input class="start-input" type="number" value="0" v-model="totalQuizzes" />
+      <input class="start-input" type="number" value="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="() => {isStarted = true}">START</button>
     </div>
@@ -20,7 +20,7 @@
 
 
       <!-- クイズ -->
-      <div v-if="currentIndex < totalQuizzes">
+      <div v-if="currentIndex < totalQuizzesPersonal">
 
         <h1>画像に合う単語を選んでください。</h1>
         <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
@@ -78,6 +78,7 @@ const quizzes = ref([]);
 // 変数
 const isStarted = ref(false)  // クイズが始まっているかどうかのフラグ変数
 const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
+const totalQuizzesPersonal = ref(null);  //問題数を入力してもらう用
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonTextC = ref('Check');  // 確認ボタンのテキスト
@@ -92,7 +93,7 @@ const correctAnswer = ref(undefined)
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 
 // computed関数によりバーの更新
-const progressPercentage = computed(() => currentIndex.value >= totalQuizzes.value ? 100 : (currentIndex.value / totalQuizzes.value) * 100)
+const progressPercentage = computed(() => currentIndex.value >= totalQuizzesPersonal.value ? 100 : (currentIndex.value / totalQuizzesPersonal.value) * 100)
 
 // ページ離脱時の警告ポップ
 window.onbeforeunload = function(event) {
