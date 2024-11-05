@@ -4,7 +4,6 @@
      <!--hello-->
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
-      <!--問題数変えるところ できたら10刻みから選ぶんじゃなくて自分で入力できるようにしたい-->
       <h3>チャレンジする問題数を入力してください</h3>
       <input type="number" value="0" v-model="totalQuizzes" />
 
@@ -38,7 +37,7 @@
         </div>
 
         <!-- 答え合わせの時に出てくるメッセージ -->
-        <div>{{ collectText }}</div>
+        <!--<div>{{ collectText }}</div> ←クソデカExcellent-->
 
         <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
