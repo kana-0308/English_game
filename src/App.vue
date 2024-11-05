@@ -137,17 +137,19 @@ onMounted(() => {
 
 /* 空っぽの進捗バー（全体） */
 .progress-bar {
-  height: 20px;
+  height: 30px;
   background-color: #ddd;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+  border-radius:10px;
 }
 
 /* 実際の進捗バー（長さが変わるところ） */
 .progress {
   height: 100%;
   background-color: #4caf50;
+  border-radius:10px;
 }
 
 /* 選択候補の単語をきれいに並べる */
