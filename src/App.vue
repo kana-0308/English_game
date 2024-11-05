@@ -196,21 +196,23 @@ onMounted(() => {
 .main-button {
   background-color: #007bff;
   color: white;
+  width: 250px;
+  height: 100px;
 
-  border: 2px solid #cccc00;
+  border: 5px solid #cccc00;
 }
 
 .main-button:hover{
   background-color: #007bff;
   color: white;
 
-  border: 5px ridge #ffff80;
+  border: 10px ridge #ffff80;
 }
 
 .main-button:focus{
   background-color: #007bff;
   color: white;
 
-  border: 5px ridge #ffff00;
+  border: 10px ridge #ffff00;
 }
 </style>
