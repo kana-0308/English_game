@@ -186,6 +186,7 @@ onMounted(() => {
   width: 150px;
   background-color: #efefef;
   color: #000000;
+  font-size: 20px;
 
   border-radius: 100px;
   border: 2px solid #ffacac;
@@ -217,6 +218,7 @@ onMounted(() => {
 
   background-color: #007bff;
   color: white;
+  font-size: 30px;
   width: 250px;
   height: 100px;
 
@@ -235,6 +237,7 @@ onMounted(() => {
   position: relative;
   background-color: #fd90ff;
   color: #000000;
+  font-size: 30px;
 
   border-radius: 50px;
   width: 250px;
@@ -257,6 +260,6 @@ onMounted(() => {
   width: 150px;
   height: 70px;
   position: relative;
-  top: 15px;
+  top: 10px;
 }
 </style>
