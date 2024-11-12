@@ -88,10 +88,11 @@ const totalQuizzesPersonal = ref(null);  //問題数を入力してもらう用
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonTextC = ref('Check');  // 確認ボタンのテキスト
-const buttonTextN = ref('Next')
+const buttonTextN = ref('Next');
 const correctText = ref(undefined)
 const incorrectText = ref('False.')
 const correctAnswer = ref(undefined)
+const buttonTextPrint = 'Check'; //表示用ボタンのテキスト
 //currentQuiz.correctIndex.value
 
 
