@@ -185,6 +185,8 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   justify-content: space-between;
+  position: fixed;
+  bottom: 30%;
 }
 
 /* 単語のボタンのデザイン */
@@ -240,7 +242,12 @@ onMounted(() => {
 }
 
 .start-button{
-  position: relative;
+  position: fixed;
+  bottom: 50%;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+
   background-color: #fd90ff;
   color: #000000;
   font-size: 30px;
@@ -264,8 +271,6 @@ onMounted(() => {
   font-size: 50px;
   width: 150px;
   height: 70px;
-  position: relative;
-  top: 10px;
 }
 
 /* アニメーションのスタイル */
