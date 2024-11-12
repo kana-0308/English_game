@@ -276,6 +276,23 @@ onMounted(() => {
   height: 70px;
 }
 
+/*スキップボタン*/
+#skipButton {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* 緑色の例 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#skipButton:hover {
+  background-color: #3e8e41; /* ホバー時の色 */
+}
+
 /* アニメーションのスタイル */
 .quiz-container {
   display: flex;
