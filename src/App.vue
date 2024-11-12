@@ -3,8 +3,8 @@
     <!-- スタート画面 -->
      <!--hello-->
     <div v-if="!isStarted">
-      <h1>Enlish Application</h1>
-      <h3>チャレンジする問題数を入力してください</h3>
+      <h1 class="title">English Application</h1>
+      <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
       <input class="start-input" type="number" value="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="() => {isStarted = true}">START</button>
@@ -261,5 +261,27 @@ onMounted(() => {
   height: 70px;
   position: relative;
   top: 10px;
+}
+
+/*タイトルの編集*/
+.title{
+   font-family: 'MyCustomFont',sans-serif;
+   font-size: 3em;
+   color: #007bff;
+   margin-bottom: 20px;
+   font-weight: bold;
+}
+/*サブタイトルの編集*/
+.sub-title{
+  font-size: 1.5em;
+  color: #555;
+  margin-bottom: 20px;
+}
+/*フォントの定義*/
+@font-face{
+  font-family:'MyCustomFont';
+  src: url('../fonts/PixelMplus12-Regular.ttf')format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 </style>
