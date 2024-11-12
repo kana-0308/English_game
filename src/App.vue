@@ -5,7 +5,7 @@
     <div v-if="!isStarted">
       <h1>Enlish Application</h1>
       <h3>チャレンジする問題数を入力してください</h3>
-      <input class="start-input" type="number" value="0" v-model="totalQuizzes" />
+      <input class="start-input" type="number" value="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="() => {isStarted = true}">START</button>
     </div>
@@ -19,7 +19,7 @@
       
 
       <!-- クイズ -->
-      <div v-if="currentIndex < totalQuizzes">
+      <div v-if="currentIndex < totalQuizzesPersonal">
 
         <h1>画像に合う単語を選んでください。</h1>
 
@@ -84,6 +84,7 @@ const quizzes = ref([]);
 // 変数
 const isStarted = ref(false)  // クイズが始まっているかどうかのフラグ変数
 const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
+const totalQuizzesPersonal = ref(null);  //問題数を入力してもらう用
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
 const buttonTextC = ref('Check');  // 確認ボタンのテキスト
@@ -98,7 +99,7 @@ const correctAnswer = ref(undefined)
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 
 // computed関数によりバーの更新
-const progressPercentage = computed(() => currentIndex.value >= totalQuizzes.value ? 100 : (currentIndex.value / totalQuizzes.value) * 100)
+const progressPercentage = computed(() => currentIndex.value >= totalQuizzesPersonal.value ? 100 : (currentIndex.value / totalQuizzesPersonal.value) * 100)
 
 // ページ離脱時の警告ポップ
 window.onbeforeunload = function(event) {
@@ -191,6 +192,7 @@ onMounted(() => {
   width: 150px;
   background-color: #efefef;
   color: #000000;
+  font-size: 20px;
 
   border-radius: 100px;
   border: 2px solid #ffacac;
@@ -222,6 +224,7 @@ onMounted(() => {
 
   background-color: #007bff;
   color: white;
+  font-size: 30px;
   width: 250px;
   height: 100px;
 
@@ -236,15 +239,11 @@ onMounted(() => {
   border: 10px ridge #ffff00;
 }
 
-.start-input{
-  background-color: #f1f1f1;
-  width: 250px;
-  height: 100px;
-}
-
 .start-button{
+  position: relative;
   background-color: #fd90ff;
   color: #000000;
+  font-size: 30px;
 
   border-radius: 50px;
   width: 250px;
@@ -260,7 +259,14 @@ onMounted(() => {
   background-color: #feadff;
   border: 5px solid #fbfb33;
 }
-
+.start-input{
+  background-color: #f1f1f1;
+  font-size: 50px;
+  width: 150px;
+  height: 70px;
+  position: relative;
+  top: 10px;
+}
 
 /* アニメーションのスタイル */
 .quiz-container {
