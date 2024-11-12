@@ -18,28 +18,33 @@
       </div>
       
 
-
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzesPersonal">
 
         <h1>画像に合う単語を選んでください。</h1>
-        <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
-        <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
-        <div class="word-options">
-          <button 
-            v-for="(word, index) in currentQuiz.words" 
-            :key="index" 
-            @click="seletWord(index)"
-            v-bind:class="{ selected: selectedWordIndex === index }"
-          >
-            {{ word }}
-          </button>
-        </div>
+        <!-- アニメーションで動かす範囲 -->
+        <transition name="quiz-fade-slide" mode="out-in">
+          <div :key="currentIndex" class="quiz-container">
+            <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
-        <!-- 答え合わせの時に出てくるメッセージ -->
-        <div>{{ correctText }}</div>
-        <div>{{ correctAnswer }}</div>
+            <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
+            <div class="word-options">
+              <button 
+                v-for="(word, index) in currentQuiz.words" 
+                :key="index" 
+                @click="seletWord(index)"
+                v-bind:class="{ selected: selectedWordIndex === index }"
+              >
+                {{ word }}
+              </button>
+            </div>
+
+            <!-- 答え合わせの時に出てくるメッセージ -->
+            <div>{{ correctText }}</div>
+            <div>{{ correctAnswer }}</div>
+          </div>
+        </transition>
 
         <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
@@ -47,9 +52,10 @@
         </button>
 
       </div>
+      
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
-      <div v-else>
+      <div v-if="currentIndex >= totalQuizzes">
         <h3>かかった時間は</h3>
         <!-- <button class="main-button" @click="checkAnswer">
           {{ buttonTextN }}
@@ -253,7 +259,6 @@ onMounted(() => {
   background-color: #feadff;
   border: 5px solid #fbfb33;
 }
-
 .start-input{
   background-color: #f1f1f1;
   font-size: 50px;
@@ -261,5 +266,26 @@ onMounted(() => {
   height: 70px;
   position: relative;
   top: 10px;
+}
+
+/* アニメーションのスタイル */
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quiz-fade-slide-enter-active, .quiz-fade-slide-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.quiz-fade-slide-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.quiz-fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
 }
 </style>
