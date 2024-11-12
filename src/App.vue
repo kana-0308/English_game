@@ -55,7 +55,7 @@
       
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
-      <div v-if="currentIndex >= totalQuizzes">
+      <div v-if="currentIndex >= totalQuizzesPersonal">
         <h3>かかった時間は</h3>
         <!-- <button class="main-button" @click="checkAnswer">
           {{ buttonTextN }}
