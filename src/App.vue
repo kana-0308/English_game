@@ -3,8 +3,8 @@
     <!-- スタート画面 -->
      <!--hello-->
     <div v-if="!isStarted">
-      <h1>Enlish Application</h1>
-      <h3>チャレンジする問題数を入力してください</h3>
+      <h1 class="title">English Application</h1>
+      <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
       <input class="start-input" type="number" value="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="() => {isStarted = true}">START</button>
@@ -37,14 +37,19 @@
           </button>
         </div>
 
-        <!-- 答え合わせの時に出てくるメッセージ -->
-        <div>{{ correctText }}</div>
-        <div>{{ correctAnswer }}</div>
+            <!-- 答え合わせの時に出てくるメッセージ -->
+            <div>{{ correctText }}</div>
+            <div>{{ correctAnswer }}</div>
+            <button class="main-button" @click="checkAnswer">
+              {{ buttonTextPrint }}
+            </button>
+          </div>
+        </transition>
 
         <!-- 決定ボタン -->
-        <button class="main-button" @click="checkAnswer">
-          {{ buttonTextC }}
-        </button>
+        <!--  <button class="main-button" @click="checkAnswer">
+          {{ buttonTextPrint }}
+        </button>  -->
 
       </div>
       
@@ -52,9 +57,6 @@
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-if="currentIndex >= totalQuizzesPersonal">
         <h3>かかった時間は</h3>
-        <!-- <button class="main-button" @click="checkAnswer">
-          {{ buttonTextN }}
-        </button> -->
       </div>
     </div>
   </div>
@@ -87,6 +89,7 @@ const buttonTextN = ref('Next')
 const correctText = ref(undefined)
 const incorrectText = ref('False.')
 const correctAnswer = ref(undefined)
+const buttonTextPrint = 'Check'; //表示用ボタンのテキスト
 //currentQuiz.correctIndex.value
 
 
@@ -123,14 +126,16 @@ function checkAnswer() {
   else{
   correctText.value=incorrectText.value
   correctAnswer.value=currentQuiz.value.word[currentQuiz.value.correctIndex]
+  buttonTextPrint.value=buttonTextN.value.word[buttonTextN.value.correctIndex]
   }
    
    correctText.value=undefined
 
-   
+  
 
   // 次の問題に移る
   currentIndex.value++
+  buttonTextPrint.value=buttonTextC.value.word[buttonTextC.value.correctIndex]
 
   // 単語の選択をリセット
   selectedWordIndex.value = null
@@ -275,4 +280,64 @@ onMounted(() => {
   height: 70px;
 }
 
+/*スキップボタン*/
+#skipButton {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* 緑色の例 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#skipButton:hover {
+  background-color: #3e8e41; /* ホバー時の色 */
+}
+
+/* アニメーションのスタイル */
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quiz-fade-slide-enter-active, .quiz-fade-slide-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.quiz-fade-slide-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.quiz-fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+
+/*タイトルの編集*/
+.title{
+   font-family: 'MyCustomFont',sans-serif;
+   font-size: 3em;
+   color: #007bff;
+   margin-bottom: 20px;
+   font-weight: bold;
+}
+/*サブタイトルの編集*/
+.sub-title{
+  font-size: 1.5em;
+  color: #555;
+  margin-bottom: 20px;
+}
+/*フォントの定義*/
+@font-face{
+  font-family:'MyCustomFont';
+  src: url('../fonts/PixelMplus12-Regular.ttf')format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 </style>
