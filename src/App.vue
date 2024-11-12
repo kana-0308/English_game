@@ -37,15 +37,12 @@
           </button>
         </div>
 
-            <!-- 答え合わせの時に出てくるメッセージ -->
-            <div>{{ correctText }}</div>
-            <div>{{ correctAnswer }}</div>
-            <button class="main-button" @click="checkAnswer">
-              {{ buttonTextPrint }}
-            </button>
-          </div>
-        </transition>
-
+        <!-- 答え合わせの時に出てくるメッセージ -->
+        <div>{{ correctText }}</div>
+        <div>{{ correctAnswer }}</div>
+        <button class="main-button" @click="checkAnswer">
+          {{ buttonTextPrint }}
+        </button>
         <!-- 決定ボタン -->
         <!--  <button class="main-button" @click="checkAnswer">
           {{ buttonTextPrint }}
