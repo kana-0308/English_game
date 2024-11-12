@@ -43,23 +43,17 @@
             <!-- 答え合わせの時に出てくるメッセージ -->
             <div>{{ correctText }}</div>
             <div>{{ correctAnswer }}</div>
+            <button class="main-button" @click="checkAnswer">
+              {{ buttonTextPrint }}
+            </button>
           </div>
         </transition>
-
-        <!-- 決定ボタン -->
-        <button class="main-button" @click="checkAnswer">
-          {{ buttonTextC }}
-        </button>
-
       </div>
       
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
-      <div v-if="currentIndex >= totalQuizzes">
+      <div v-if="currentIndex >= totalQuizzesPersonal">
         <h3>かかった時間は</h3>
-        <!-- <button class="main-button" @click="checkAnswer">
-          {{ buttonTextN }}
-        </button> -->
       </div>
     </div>
   </div>
@@ -92,6 +86,7 @@ const buttonTextN = ref('Next')
 const correctText = ref(undefined)
 const incorrectText = ref('False.')
 const correctAnswer = ref(undefined)
+const buttonTextPrint = ref('Check') //表示用ボタンのテキスト
 //currentQuiz.correctIndex.value
 
 
@@ -121,14 +116,16 @@ function checkAnswer() {
   else{
   correctText.value=incorrectText.value
   correctAnswer.value=currentQuiz.value.word[currentQuiz.value.correctIndex]
+  buttonTextPrint.value=buttonTextN.value
   }
    
    correctText.value=undefined
 
-   
+  
 
   // 次の問題に移る
   currentIndex.value++
+  buttonTextPrint.value=buttonTextC.value
 
   // 単語の選択をリセット
   selectedWordIndex.value = null
@@ -185,6 +182,8 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   justify-content: space-between;
+  position: fixed;
+  bottom: 30%;
 }
 
 /* 単語のボタンのデザイン */
@@ -240,7 +239,12 @@ onMounted(() => {
 }
 
 .start-button{
-  position: relative;
+  position: fixed;
+  bottom: 50%;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+
   background-color: #fd90ff;
   color: #000000;
   font-size: 30px;
@@ -264,8 +268,6 @@ onMounted(() => {
   font-size: 50px;
   width: 150px;
   height: 70px;
-  position: relative;
-  top: 10px;
 }
 
 /* アニメーションのスタイル */
