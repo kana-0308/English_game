@@ -23,22 +23,19 @@
 
         <h1>画像に合う単語を選んでください。</h1>
 
-        <!-- アニメーションで動かす範囲 -->
-        <transition name="quiz-fade-slide" mode="out-in">
-          <div :key="currentIndex" class="quiz-container">
-            <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
+        <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
-            <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
-            <div class="word-options">
-              <button 
-                v-for="(word, index) in currentQuiz.words" 
-                :key="index" 
-                @click="seletWord(index)"
-                v-bind:class="{ selected: selectedWordIndex === index }"
-              >
-                {{ word }}
-              </button>
-            </div>
+        <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
+        <div class="word-options">
+          <button 
+            v-for="(word, index) in currentQuiz.words" 
+            :key="index" 
+            @click="seletWord(index)"
+            v-bind:class="{ selected: selectedWordIndex === index }"
+          >
+            {{ word }}
+          </button>
+        </div>
 
             <!-- 答え合わせの時に出てくるメッセージ -->
             <div>{{ correctText }}</div>
@@ -117,6 +114,13 @@ function seletWord(index) {
 
 // 未実装:メインボタンを押したときの処理
 function checkAnswer() {
+  
+  // 何も選択していない場合
+  if (selectedWordIndex.value == null) {
+    correctText.value = '選択してからボタンを押してください'
+    return
+  }
+  
   if(selectedWordIndex.value==currentQuiz.value.correctIndex)
    correctText.value='Excellent!!'
   else{
@@ -313,6 +317,7 @@ onMounted(() => {
   opacity: 0;
   transform: translateX(-100px);
 }
+
 
 /*タイトルの編集*/
 .title{
