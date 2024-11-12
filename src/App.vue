@@ -43,7 +43,7 @@
             <!-- 答え合わせの時に出てくるメッセージ -->
             <div>{{ correctText }}</div>
             <div>{{ correctAnswer }}</div>
-            <button class="main-button" @click="checkAnswer">//kokokokokokokoookokokokoko
+            <button class="main-button" @click="checkAnswer">
               {{ buttonTextPrint }}
             </button>
           </div>
@@ -60,9 +60,6 @@
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-if="currentIndex >= totalQuizzesPersonal">
         <h3>かかった時間は</h3>
-        <!-- <button class="main-button" @click="checkAnswer">
-          {{ buttonTextN }}
-        </button> -->
       </div>
     </div>
   </div>
@@ -95,7 +92,7 @@ const buttonTextN = ref('Next')
 const correctText = ref(undefined)
 const incorrectText = ref('False.')
 const correctAnswer = ref(undefined)
-//const buttonTextPrint = ref('Check') //表示用ボタンのテキスト
+const buttonTextPrint = ref('Check') //表示用ボタンのテキスト
 //currentQuiz.correctIndex.value
 
 
@@ -125,7 +122,7 @@ function checkAnswer() {
   else{
   correctText.value=incorrectText.value
   correctAnswer.value=currentQuiz.value.word[currentQuiz.value.correctIndex]
-  //buttonTextPrint.value=buttonTextN.value.word[buttonTextN.value.correctIndex]
+  buttonTextPrint.value=buttonTextN.value.word[buttonTextN.value.correctIndex]
   }
    
    correctText.value=undefined
@@ -134,7 +131,7 @@ function checkAnswer() {
 
   // 次の問題に移る
   currentIndex.value++
-  //buttonTextPrint.value=buttonTextC.value.word[buttonTextC.value.correctIndex]
+  buttonTextPrint.value=buttonTextC.value.word[buttonTextC.value.correctIndex]
 
   // 単語の選択をリセット
   selectedWordIndex.value = null
