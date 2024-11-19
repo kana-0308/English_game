@@ -108,6 +108,7 @@ const buttonTextN = ref('Next')
 const correctText = ref(undefined)
 const incorrectText = ref('False.')
 const correctAnswer = ref(undefined)
+const buttonTextPrint = 'Check'; //表示用ボタンのテキスト
 const correctCount = ref(0)
 //currentQuiz.correctIndex.value
 
