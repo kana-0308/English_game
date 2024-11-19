@@ -3,9 +3,9 @@
     <!-- スタート画面 -->
      <!--hello-->
     <div v-if="!isStarted">
-      <h1>Enlish Application</h1>
-      <h3>チャレンジする問題数を入力してください</h3>
-      <input class="start-input" type="number" value="0" v-model="totalQuizzesPersonal" />
+      <h1 class="title">English Application</h1>
+      <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
+      <input class="start-input" type="number" value="0" min="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="() => {isStarted = true}">START</button>
     </div>
@@ -18,11 +18,11 @@
       </div>
       
 
-
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzesPersonal">
 
-        <h1>画像に合う単語を選んでください。</h1>
+        <h1 class="sub-title2">画像に合う単語を選んでください。</h1>
+
         <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
 
         <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
@@ -40,13 +40,16 @@
         <!-- 答え合わせの時に出てくるメッセージ -->
         <div>{{ correctText }}</div>
         <div>{{ correctAnswer }}</div>
-
-        <!-- 決定ボタン -->
         <button class="main-button" @click="checkAnswer">
-          {{ buttonTextC }}
+          {{ buttonTextPrint }}
         </button>
+        <!-- 決定ボタン -->
+        <!--  <button class="main-button" @click="checkAnswer">
+          {{ buttonTextPrint }}
+        </button>  -->
 
       </div>
+      
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-if="currentIndex >= totalQuizzesPersonal">
@@ -134,20 +137,29 @@ function seletWord(index) {
 
 // 未実装:メインボタンを押したときの処理
 function checkAnswer() {
+  
+  // 何も選択していない場合
+  if (selectedWordIndex.value == null) {
+    correctText.value = '選択してからボタンを押してください'
+    return
+  }
+  
   if(selectedWordIndex.value==currentQuiz.value.correctIndex)
    correctText.value='Excellent!!'
    correctCount.value++
   else{
   correctText.value=incorrectText.value
   correctAnswer.value=currentQuiz.value.word[currentQuiz.value.correctIndex]
+  buttonTextPrint.value=buttonTextN.value.word[buttonTextN.value.correctIndex]
   }
    
    correctText.value=undefined
 
-   
+  
 
   // 次の問題に移る
   currentIndex.value++
+  buttonTextPrint.value=buttonTextC.value.word[buttonTextC.value.correctIndex]
 
   // 単語の選択をリセット
   selectedWordIndex.value = null
@@ -204,6 +216,8 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   justify-content: space-between;
+  position: fixed;
+  bottom: 30%;
 }
 
 /* 単語のボタンのデザイン */
@@ -224,7 +238,7 @@ onMounted(() => {
 }
 
 .word-options button:focus{
-  background-color: #ffacac;
+  background-color: #ffcdcd;
   color: black;
   border: 0;
 }
@@ -259,7 +273,12 @@ onMounted(() => {
 }
 
 .start-button{
-  position: relative;
+  position: fixed;
+  bottom: 50%;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+
   background-color: #fd90ff;
   color: #000000;
   font-size: 30px;
@@ -278,13 +297,96 @@ onMounted(() => {
   background-color: #feadff;
   border: 5px solid #fbfb33;
 }
-
 .start-input{
   background-color: #f1f1f1;
   font-size: 50px;
   width: 150px;
   height: 70px;
-  position: relative;
-  top: 10px;
 }
+
+/*スキップボタン*/
+<style>
+#skipButton {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* 緑色の例 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#skipButton:hover {
+  background-color: #3e8e41; /* ホバー時の色 */
+}
+
+/* アニメーションのスタイル */
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quiz-fade-slide-enter-active, .quiz-fade-slide-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.quiz-fade-slide-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.quiz-fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+
+/*タイトルの編集*/
+.title{
+   font-family: 'MyCustomFont',sans-serif;
+   font-size: 3.5em;
+   color: #007bff;
+   margin-bottom: 20px;
+   font-weight: bold;
+}
+/*サブタイトルの編集*/
+.sub-title{
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 1.5em;
+  color: #555;
+  margin-bottom: 20px;
+}
+/*サブタイトル２の編集*/
+.sub-title2{
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 2em;
+  color: #555;
+  margin-bottom: 20px;
+}
+/*サブタイトル３の編集*/
+.sub-title3{
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 20px;
+}
+/*フォントの定義*/
+@font-face{
+  font-family:'MyCustomFont';
+  src: url('../fonts/PixelMplus12-Regular.ttf')format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*背景色の設定*/
+:global(body) {
+  background-image: url('../image/background.jpg');
+  background-size: 1500px 900px;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  }
+
 </style>
