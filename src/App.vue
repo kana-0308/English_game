@@ -5,7 +5,7 @@
     <div v-if="!isStarted">
       <h1 class="title">English Application</h1>
       <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
-      <input class="start-input" type="number" value="0" v-model="totalQuizzesPersonal" />
+      <input class="start-input" type="number" value="0" min="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="() => {isStarted = true}">START</button>
     </div>
