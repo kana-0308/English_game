@@ -211,7 +211,7 @@ onMounted(() => {
 }
 
 .word-options button:focus{
-  background-color: #ffacac;
+  background-color: #ffcdcd;
   color: black;
   border: 0;
 }
