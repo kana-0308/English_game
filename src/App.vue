@@ -21,7 +21,7 @@
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzesPersonal">
 
-        <h1>画像に合う単語を選んでください。</h1>
+        <h1 class="sub-title2">画像に合う単語を選んでください。</h1>
 
         <!-- アニメーションで動かす範囲 -->
         <transition name="quiz-fade-slide" mode="out-in">
@@ -59,7 +59,7 @@
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-if="currentIndex >= totalQuizzesPersonal">
-        <h3>かかった時間は</h3>
+        <h3 class="sub-title3">かかった時間は</h3>
       </div>
     </div>
   </div>
@@ -300,14 +300,29 @@ onMounted(() => {
 /*タイトルの編集*/
 .title{
    font-family: 'MyCustomFont',sans-serif;
-   font-size: 3em;
+   font-size: 3.5em;
    color: #007bff;
    margin-bottom: 20px;
    font-weight: bold;
 }
 /*サブタイトルの編集*/
 .sub-title{
+  font-family: 'MyCustomFont',sans-serif;
   font-size: 1.5em;
+  color: #555;
+  margin-bottom: 20px;
+}
+/*サブタイトル２の編集*/
+.sub-title2{
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 2em;
+  color: #555;
+  margin-bottom: 20px;
+}
+/*サブタイトル３の編集*/
+.sub-title3{
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 1em;
   color: #555;
   margin-bottom: 20px;
 }
@@ -318,4 +333,13 @@ onMounted(() => {
   font-weight: normal;
   font-style: normal;
 }
+
+/*背景色の設定*/
+:global(body) {
+  background-image: url('../image/background.jpg');
+  background-size: 1500px 900px;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  }
+
 </style>
