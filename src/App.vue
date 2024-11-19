@@ -49,8 +49,8 @@
       </div>
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
-      <div v-else>
-        <h3>かかった時間は</h3>
+      <div v-if="currentIndex >= totalQuizzesPersonal">
+        <h3 class="sub-title3">かかった時間は</h3>
          <div class="score">
            正解数: {{ correctCount }}
          </div>
