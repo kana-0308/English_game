@@ -51,13 +51,35 @@
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-else>
         <h3>かかった時間は</h3>
-        <!-- <button class="main-button" @click="checkAnswer">
-          {{ buttonTextN }}
-        </button> -->
+         <div class="score">
+           正解数: {{ correctCount }}
+         </div>
       </div>
     </div>
   </div>
 </template>
+
+<template>
+  <div class="hello">
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>RANK</th>
+          <th>NAME</th>
+          <th>SCORE</th>
+        </tr>
+      </thead>
+      <transition-group tag="tbody">
+        <tr v-for="(post, index) in allScoreData" :key="post.id">
+          <td :class="{newRecord: post.isNew}">{{index + 1}} 位</td>
+          <td :class="{newRecord: post.isNew}">{{post.name}}</td>
+          <td :class="{newRecord: post.isNew}">{{post.score}}</td>
+        </tr>
+      </transition-group>
+    </table>
+  </div>
+</template>
+〜〜
 
 
 
@@ -86,6 +108,7 @@ const buttonTextN = ref('Next')
 const correctText = ref(undefined)
 const incorrectText = ref('False.')
 const correctAnswer = ref(undefined)
+const correctCount = ref(0)
 //currentQuiz.correctIndex.value
 
 
@@ -112,6 +135,7 @@ function seletWord(index) {
 function checkAnswer() {
   if(selectedWordIndex.value==currentQuiz.value.correctIndex)
    correctText.value='Excellent!!'
+   correctCount.value++
   else{
   correctText.value=incorrectText.value
   correctAnswer.value=currentQuiz.value.word[currentQuiz.value.correctIndex]
