@@ -54,35 +54,36 @@
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-if="currentIndex >= totalQuizzesPersonal">
         <h3 class="sub-title3">かかった時間は</h3>
-         <div class="score">
-           正解数: {{ correctCount }}
-         </div>
+        <div class="score">
+          正解数: {{ correctCount }}
+        </div>
+
+        <!-- スコア表示 -->
+        <div class="hello">
+          <table class="ranking-table">
+            <thead>
+              <tr>
+                <th>RANK</th>
+                <th>NAME</th>
+                <th>SCORE</th>
+              </tr>
+            </thead>
+            <transition-group tag="tbody">
+              <tr v-for="(post, index) in allScoreData" :key="post.id">
+                <td :class="{newRecord: post.isNew}">{{index + 1}} 位</td>
+                <td :class="{newRecord: post.isNew}">{{post.name}}</td>
+                <td :class="{newRecord: post.isNew}">{{post.score}}</td>
+              </tr>
+            </transition-group>
+          </table>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
-<template>
-  <div class="hello">
-    <table class="ranking-table">
-      <thead>
-        <tr>
-          <th>RANK</th>
-          <th>NAME</th>
-          <th>SCORE</th>
-        </tr>
-      </thead>
-      <transition-group tag="tbody">
-        <tr v-for="(post, index) in allScoreData" :key="post.id">
-          <td :class="{newRecord: post.isNew}">{{index + 1}} 位</td>
-          <td :class="{newRecord: post.isNew}">{{post.name}}</td>
-          <td :class="{newRecord: post.isNew}">{{post.score}}</td>
-        </tr>
-      </transition-group>
-    </table>
-  </div>
-</template>
-〜〜
+
 
 
 
@@ -129,7 +130,7 @@ window.onbeforeunload = function(event) {
   return message;
 };
 
-// 未実装:単語をクリックしたときに選択
+// 単語をクリックしたときに選択
 function seletWord(index) {
   selectedWordIndex.value = index
   console.log(selectedWordIndex.value)
@@ -144,9 +145,10 @@ function checkAnswer() {
     return
   }
   
-  if(selectedWordIndex.value==currentQuiz.value.correctIndex)
-   correctText.value='Excellent!!'
+  if(selectedWordIndex.value==currentQuiz.value.correctIndex) {
+    correctText.value='Excellent!!'
    correctCount.value++
+  }
   else{
   correctText.value=incorrectText.value
   correctAnswer.value=currentQuiz.value.word[currentQuiz.value.correctIndex]
@@ -305,7 +307,7 @@ onMounted(() => {
 }
 
 /*スキップボタン*/
-<style>
+
 #skipButton {
   position: fixed;
   bottom: 20px;
@@ -384,7 +386,8 @@ onMounted(() => {
 /*背景色の設定*/
 :global(body) {
   background-image: url('../image/background.jpg');
-  background-size: 1500px 900px;
+  background-position: center center;
+  background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   }
