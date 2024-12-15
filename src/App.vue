@@ -12,7 +12,7 @@
 
 
     <div v-else>
-      <!-- 未実装:進捗がどれくらい進んでいるか確認するバー -->
+      <!-- 進捗がどれくらい進んでいるか確認するバー -->
       <div class="progress-bar">
         <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
       </div>
@@ -38,11 +38,20 @@
         </div>
 
         <!-- 答え合わせの時に出てくるメッセージ -->
-        <div>{{ correctText }}</div>
-        <div>{{ correctAnswer }}</div>
-        <button class="main-button" @click="checkAnswer">
+        <div class="main-text">
+          {{ correctText }}
+        </div>
+
+        <!-- 正解、間違いの演出 -->
+        <div v-bind:class="{ 'correct-bar': isCorrect, 'incorrect-bar': isCorrect == false}"></div>
+        <img :src="markImagePointer" class="mark-image">
+
+        <!-- ボタン -->
+        <button v-bind:class="[{ 'incorrect-button': isCorrect == false }, 'correct-button']" @click="checkAnswer">
           {{ buttonTextPrint }}
         </button>
+
+        
         <!-- 決定ボタン -->
         <!--  <button class="main-button" @click="checkAnswer">
           {{ buttonTextPrint }}
@@ -107,13 +116,15 @@ const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
 const totalQuizzesPersonal = ref(null);  //問題数を入力してもらう用
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
-const buttonTextC = ref('Check');  // 確認ボタンのテキスト
-const buttonTextN = ref('Next')
+//const buttonTextC = ref('Check');  // 確認ボタンのテキスト
+//const buttonTextN = ref('Next')
 const correctText = ref(undefined)
-const incorrectText = ref('False.')
-const correctAnswer = ref(undefined)
-const buttonTextPrint = 'Check'; //表示用ボタンのテキスト
+//const incorrectText = ref('False.')
+//const correctAnswer = ref(undefined)
+const buttonTextPrint = ref('Check') //表示用ボタンのテキスト
 const correctCount = ref(0)
+const markImagePointer = ref(undefined);
+const isCorrect = ref(undefined)
 //currentQuiz.correctIndex.value
 
 
@@ -132,13 +143,69 @@ window.onbeforeunload = function(event) {
 
 // 単語をクリックしたときに選択
 function seletWord(index) {
+  if (buttonTextPrint.value === 'Next') {
+    correctText.value = 'Nextボタンを押して次に移動してください'
+    return
+  }
+
   selectedWordIndex.value = index
-  console.log(selectedWordIndex.value)
 }
 
-// 未実装:メインボタンを押したときの処理
+// メインボタンを押したときの処理
 function checkAnswer() {
-  
+
+  // 何も選択していない場合
+  if (selectedWordIndex.value == null) {
+    correctText.value = '選択してからボタンを押してください'
+    return
+  }
+
+  // Checkモード時の処理
+  if (buttonTextPrint.value === 'Check') {
+    
+    // ユーザの選択が答えと一致しているのなら
+    if (selectedWordIndex.value == currentQuiz.value.correctIndex) {
+      correctText.value = 'Excellent!!'
+      isCorrect.value = true
+      correctCount.value++
+
+      // ボタンの文字を'Next'に変更
+      buttonTextPrint.value = 'Next'
+
+      // 正解マークを表示
+      markImagePointer.value = '/image/check-mark.png'
+    }
+
+    // 間違いである場合
+    else {
+      isCorrect.value = false
+      correctText.value = 'あともう少し'
+
+      // 不正解マークを表示
+      markImagePointer.value = '/image/batu-mark.png'
+    }
+  }
+
+  // Nextモード時の処理
+  else {
+    // 次の問題に移る
+    currentIndex.value++
+    isCorrect.value = undefined
+
+    // 単語の選択をリセット
+    selectedWordIndex.value = null
+
+    // メインテキストをリセット
+    correctText.value = undefined
+
+    // ボタンの文字を'Check'に変更
+    buttonTextPrint.value = 'Check'
+
+    // マークを非表示
+    markImagePointer.value = undefined
+  }
+
+  /*
   // 何も選択していない場合
   if (selectedWordIndex.value == null) {
     correctText.value = '選択してからボタンを押してください'
@@ -155,16 +222,11 @@ function checkAnswer() {
   buttonTextPrint.value=buttonTextN.value.word[buttonTextN.value.correctIndex]
   }
    
-   correctText.value=undefined
-
-  
-
-  // 次の問題に移る
-  currentIndex.value++
+  correctText.value=undefined
+   
   buttonTextPrint.value=buttonTextC.value.word[buttonTextC.value.correctIndex]
-
-  // 単語の選択をリセット
-  selectedWordIndex.value = null
+*/
+  
 }
 
 
@@ -188,6 +250,14 @@ onMounted(() => {
 <style scoped>/*CSS */
 
 /* メインコンテンツであるクイズのデザイン */
+template {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .main {
   text-align: center;
 }
@@ -211,15 +281,14 @@ onMounted(() => {
 
 /* 選択候補の単語をきれいに並べる */
 .word-options {
-  margin-left: 30%;
-  margin-right: 30%;
+  margin-top: 125px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
   height: 125px;
 
   display: flex;
   justify-content: center;
-  justify-content: space-between;
-  position: fixed;
-  bottom: 30%;
 }
 
 /* 単語のボタンのデザイン */
@@ -272,6 +341,87 @@ onMounted(() => {
 
 .main-button:focus{
   border: 10px ridge #ffff00;
+}
+
+/* 通常または正解時のボタン */
+.correct-button {
+  font-family: 'MyCustomFont',sans-serif;
+
+  position: fixed;
+  bottom: 75px;
+  right: 100px;
+
+  color: #ffffff;
+  background-color: #6ae21b;
+  border-bottom: 10px solid #0c9708;
+
+  font-size: 36px;
+  width: 250px;
+  height: 100px;
+
+  border-radius: 20px;
+}
+
+.correct-button:hover {
+  margin-top: 3px;
+  color: #ffffff;
+  background: #6de41d;
+  border-bottom: 2px solid #0c9708;
+}
+
+/* 不正解時のボタン */
+.incorrect-button {
+  font-family: 'MyCustomFont',sans-serif;
+
+  position: fixed;
+  bottom: 75px;
+  right: 100px;
+
+  color: #ffffff;
+  background-color: #df1674;
+  border-bottom: 10px solid #99063f;
+
+  font-size: 36px;
+  width: 250px;
+  height: 100px;
+
+  border-radius: 20px;
+}
+
+.incorrect-button:hover {
+  margin-top: 3px;
+  color: #ffffff;
+  background: #e61b7a;
+  border-bottom: 2px solid #99063f;
+}
+
+.mark-image {
+  position: fixed;
+  bottom: 75px;
+  left: 5%;
+
+  height: 100px;
+  width: auto;
+}
+
+.correct-bar {
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+
+  width: 100%;
+  height: 240px;
+  background: #b9ff9e;
+}
+
+.incorrect-bar {
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+
+  width: 100%;
+  height: 240px;
+  background: #ffbcbc;
 }
 
 .start-button{
@@ -350,31 +500,42 @@ onMounted(() => {
 .title{
    font-family: 'MyCustomFont',sans-serif;
    font-size: 3.5em;
-   color: #007bff;
+   /*color: #007bff;*/
+   color: #ffffff;
    margin-bottom: 20px;
    font-weight: bold;
+   text-shadow: 1px 1px 10px #000000;
 }
 /*サブタイトルの編集*/
 .sub-title{
   font-family: 'MyCustomFont',sans-serif;
   font-size: 1.5em;
-  color: #555;
+  color: #3b3b3b;
   margin-bottom: 20px;
 }
 /*サブタイトル２の編集*/
 .sub-title2{
   font-family: 'MyCustomFont',sans-serif;
   font-size: 2em;
-  color: #555;
+  color: #3b3b3b;
   margin-bottom: 20px;
 }
 /*サブタイトル３の編集*/
 .sub-title3{
   font-family: 'MyCustomFont',sans-serif;
   font-size: 1em;
-  color: #555;
+  color: #3b3b3b;
   margin-bottom: 20px;
 }
+
+/*メインテキスト*/
+.main-text {
+  margin-top: 30px;
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 2em;
+  color: #3b3b3b;
+}
+
 /*フォントの定義*/
 @font-face{
   font-family:'MyCustomFont';
