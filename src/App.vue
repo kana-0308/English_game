@@ -2,12 +2,12 @@
   <div class="main">
     <!-- スタート画面 -->
      <!--hello-->
-    <div v-if="!isStarted">
+    <div v-if="!isStarted" class="start-contener">
       <h1 class="title">English Application</h1>
       <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
       <input class="start-input" type="number" value="0" min="0" v-model="totalQuizzesPersonal" />
 
-      <button class="start-button" @click="() => {isStarted = true}">START</button>
+      <button class="start-button" @click="startQuiz">START</button>
     </div>
 
 
@@ -21,50 +21,55 @@
       <!-- クイズ -->
       <div v-if="currentIndex < totalQuizzesPersonal">
 
-        <h1 class="sub-title2">画像に合う単語を選んでください。</h1>
+        <div class="main-contener">
+          <h1 class="sub-title2">画像に合う単語を選んでください。</h1>
 
-        <img :src="currentQuiz.image" :width="currentQuiz.width" :height="currentQuiz.height" alt="quiz image">
+          <img class="image" :src="currentQuiz.image" alt="quiz image">
 
-        <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
-        <div class="word-options">
-          <button 
-            v-for="(word, index) in currentQuiz.words" 
-            :key="index" 
-            @click="seletWord(index)"
-            v-bind:class="{ selected: selectedWordIndex === index }"
-          >
-            {{ word }}
-          </button>
+          <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
+          <div class="word-options">
+            <button 
+              v-for="(word, index) in currentQuiz.words" 
+              :key="index" 
+              @click="seletWord(index)"
+              v-bind:class="{ selected: selectedWordIndex === index }"
+            >
+              {{ word }}
+            </button>
+          </div>
         </div>
 
         <!-- 答え合わせの時に出てくるメッセージ -->
-        <div class="main-text">
-          {{ correctText }}
+        <div class="text-contener">
+          <div class="main-text">
+            {{ correctText }}
+          </div>
         </div>
-
-        <!-- 正解、間違いの演出 -->
-        <div v-bind:class="{ 'correct-bar': isCorrect, 'incorrect-bar': isCorrect == false}"></div>
-        <img :src="markImagePointer" class="mark-image">
-
-        <!-- ボタン -->
-        <button v-bind:class="[{ 'incorrect-button': isCorrect == false }, 'correct-button']" @click="checkAnswer">
-          {{ buttonTextPrint }}
-        </button>
-
         
-        <!-- 決定ボタン -->
-        <!--  <button class="main-button" @click="checkAnswer">
-          {{ buttonTextPrint }}
-        </button>  -->
 
+        <div class="io-contener">
+          <!-- 正解、間違いの演出 -->
+          <div class="bar" v-bind:class="[{ 'correct-bar': isCorrect, 'incorrect-bar': isCorrect == false}, undefined]"></div>
+          <img :src="markImagePointer" class="mark-image">
+
+          <!-- ボタン -->
+          <button class="main-button" v-bind:class="[{ 'main-button-incorrect': isCorrect == false }, 'main-button-correct']" @click="checkAnswer">
+            {{ buttonTextPrint }}
+          </button>
+        </div>
+        
       </div>
       
 
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-if="currentIndex >= totalQuizzesPersonal">
-        <h3 class="sub-title3">かかった時間は</h3>
-        <div class="score">
-          正解数: {{ correctCount }}
+        <!-- スコア表示 -->
+        <div class="result-contener">
+          <h1 class="sub-title3">かかった時間は {{ takenTime }} 秒</h1>
+          <div class="score">
+            <div class="score-text">正解数: {{ correctCount }}</div>
+            <div class="score-text">SCORE: {{ score }}</div>
+          </div>
         </div>
 
         <!-- スコア表示 -->
@@ -94,20 +99,9 @@
 
 
 
-
-
 <script setup>//Javascript
 import { ref, onMounted, computed } from 'vue';
 
-// クイズデータの集合オブジェクト（構造体）
-/*
-  quiz {
-    image: "画像ファイルのパス",
-    words: ["cat", "dog", "fish", "bird"],
-    correctIndex: 正解である単語が配列の何番目であるか
-  }
-  quizzesはquizオブジェクトの集合体（配列）
-*/
 const quizzes = ref([]);
 
 // 変数
@@ -124,15 +118,26 @@ const correctText = ref(undefined)
 const buttonTextPrint = ref('Check') //表示用ボタンのテキスト
 const correctCount = ref(0)
 const markImagePointer = ref(undefined);
-const isCorrect = ref(undefined)
-//currentQuiz.correctIndex.value
+const isCorrect = ref(undefined)  // 問題に正解しているか、不正解であるか
+
+const startTime = ref(0)
+let mistakeCount = 0
 
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
 const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
 
+// クイズの終了
+const isEnd = computed(() => currentIndex.value >= totalQuizzesPersonal.value ? true : false)
+
 // computed関数によりバーの更新
-const progressPercentage = computed(() => currentIndex.value >= totalQuizzesPersonal.value ? 100 : (currentIndex.value / totalQuizzesPersonal.value) * 100)
+const progressPercentage = computed(() => isEnd.value ? 100 : (currentIndex.value / totalQuizzesPersonal.value) * 100)
+
+// 時間の更新
+const takenTime = computed(() => isEnd.value ? Math.floor((Date.now() - startTime.value)/1000) : 0)
+
+// スコアの更新
+const score = computed(() => isEnd.value ? correctCount.value*1000-(mistakeCount*300) : 0)
 
 // ページ離脱時の警告ポップ
 window.onbeforeunload = function(event) {
@@ -140,6 +145,12 @@ window.onbeforeunload = function(event) {
   event.returnValue = message; // 古いブラウザ用
   return message;
 };
+
+// 始まり
+function startQuiz() {
+  isStarted.value = true;
+  startTime.value = Date.now()
+}
 
 // 単語をクリックしたときに選択
 function seletWord(index) {
@@ -173,16 +184,17 @@ function checkAnswer() {
       buttonTextPrint.value = 'Next'
 
       // 正解マークを表示
-      markImagePointer.value = '/image/check-mark.png'
+      markImagePointer.value = './image/check-mark.png'
     }
 
     // 間違いである場合
     else {
       isCorrect.value = false
       correctText.value = 'あともう少し'
+      mistakeCount++
 
       // 不正解マークを表示
-      markImagePointer.value = '/image/batu-mark.png'
+      markImagePointer.value = './image/batu-mark.png'
     }
   }
 
@@ -202,7 +214,7 @@ function checkAnswer() {
     buttonTextPrint.value = 'Check'
 
     // マークを非表示
-    markImagePointer.value = undefined
+    markImagePointer.value = './image/none-mark.png'
   }
 
   /*
@@ -226,13 +238,12 @@ function checkAnswer() {
    
   buttonTextPrint.value=buttonTextC.value.word[buttonTextC.value.correctIndex]
 */
-  
 }
 
 
 // クイズのデータであるJSONファイルを読み込む非同期処理
 const loadQuizzes = async () => {
-  const response = await fetch('/json/easy-lesson.json'); // jsonファイルへのパス
+  const response = await fetch('./json/easy-lesson.json'); // jsonファイルへのパス
   const data = await response.json();
   quizzes.value = data.quizzes;
   totalQuizzes.value = quizzes.value.length;
@@ -247,24 +258,94 @@ onMounted(() => {
 
 
 
-<style scoped>/*CSS */
+<style>/*CSS */
 
 /* メインコンテンツであるクイズのデザイン */
-template {
-  height: 100%;
+
+html, body {
   margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* スクロールを無効化 */
+}
+
+/* 背景 */
+body {
+  background-image: url('../image/background.jpg');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .main {
+  height: 100svh;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+.start-contener {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  flex-direction: column;
+
+  height: 100svh;
+  width: 100%;
+}
+
+.main-contener {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+
+  height: 65svh;
+  width: 100%;
+}
+
+/* メインテキスト */
+.text-contener {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+
+  height: 12svh;
+  width: 100%;
+}
+
+/* 入力出力 */
+.io-contener {
+  position: relative;
+  height: 20svh;
+  width: 100%;
+  border-top: 3px solid #8f8f8f;
+}
+
+/* 結果表示 */
+.result-contener {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+
+  height: 100svh;
+  width: 100%;
 }
 
 /* 空っぽの進捗バー（全体） */
 .progress-bar {
-  height: 30px;
+  height: 3vh;
+  max-height: 30px;
   background-color: #ddd;
   width: 80%;
   margin-left: auto;
@@ -279,27 +360,37 @@ template {
   border-radius:20px;
 }
 
+/* 画像 */
+.image {
+  height: 40%;
+  width: auto;
+}
+
 /* 選択候補の単語をきれいに並べる */
 .word-options {
-  margin-top: 125px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  height: 125px;
+  margin: 15px;
+  width: 100%;
+  height: 25%;
+  max-height: 110px;
 
   display: flex;
   justify-content: center;
+  flex-direction: row;
 }
 
 /* 単語のボタンのデザイン */
 .word-options button {
-  width: 150px;
+  width: 24%;
+  max-width: 150px;
   background-color: #efefef;
   color: #000000;
-  font-size: 20px;
+  font-size: 2.5vh;
+  margin-right: 2px;
 
   border-radius: 100px;
   border: 2px solid #ffacac;
+
+  line-break: anywhere;
 }
 
 .word-options button:hover{
@@ -320,124 +411,112 @@ template {
   color: black;
 }
 
+/*メインテキスト*/
+.main-text {
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 4vh;
+  color: #3b3b3b;
+}
+
+/* メインボタン */
+/* 通常または正解時のボタン */
+@media screen and (orientation: landscape) {
+  .main-button {
+    right: 20%;
+  }
+  .mark-image {
+    left: 20%;
+  }
+}
+
+@media screen and (orientation: portrait) {
+  .main-button {
+    right: 5%;
+  }
+  .mark-image {
+    left: 5%;
+  }
+}
+
 /* メインボタン */
 .main-button {
-  position: fixed;
-  bottom: 75px;
-  right: 100px;
+  z-index: 1;
+  font-family: 'MyCustomFont',sans-serif;
+  position: absolute;
+  bottom: 30%;
 
-  background-color: #007bff;
-  color: white;
-  font-size: 30px;
-  width: 250px;
-  height: 100px;
+  font-size: 3.5vh;
+  width: 22%;
+  height: 33%;
 
-  border: 5px solid #cccc00;
+  min-width: 100px;
+  min-height: 50px;
+  max-width: 300px;
+
+  border-radius: 2vh;
+  border: 0.5vh solid #cccc00;
 }
 
-.main-button:hover{
-  border: 10px ridge #ffff80;
+.main-button:hover {
+  border: 1vh ridge #ffff80;
 }
 
-.main-button:focus{
+.main-button:focus {
   border: 10px ridge #ffff00;
 }
 
-/* 通常または正解時のボタン */
-.correct-button {
-  font-family: 'MyCustomFont',sans-serif;
-
-  position: fixed;
-  bottom: 75px;
-  right: 100px;
-
+/* 正解時のボタン */
+.main-button-correct {
   color: #ffffff;
-  background-color: #6ae21b;
-  border-bottom: 10px solid #0c9708;
-
-  font-size: 36px;
-  width: 250px;
-  height: 100px;
-
-  border-radius: 20px;
-}
-
-.correct-button:hover {
-  margin-top: 3px;
-  color: #ffffff;
-  background: #6de41d;
-  border-bottom: 2px solid #0c9708;
+  background-color: #007bff;
 }
 
 /* 不正解時のボタン */
-.incorrect-button {
-  font-family: 'MyCustomFont',sans-serif;
-
-  position: fixed;
-  bottom: 75px;
-  right: 100px;
-
+.main-button-incorrect {
   color: #ffffff;
   background-color: #df1674;
-  border-bottom: 10px solid #99063f;
-
-  font-size: 36px;
-  width: 250px;
-  height: 100px;
-
-  border-radius: 20px;
-}
-
-.incorrect-button:hover {
-  margin-top: 3px;
-  color: #ffffff;
-  background: #e61b7a;
-  border-bottom: 2px solid #99063f;
 }
 
 .mark-image {
-  position: fixed;
-  bottom: 75px;
-  left: 5%;
+  position: absolute;
+  bottom: 30%;
 
-  height: 100px;
+  height: 40%;
   width: auto;
 }
 
-.correct-bar {
-  position: fixed;
-  bottom: 0px;
+.bar {
+  position: absolute;
+  bottom: 0;
   left: 0;
 
   width: 100%;
-  height: 240px;
+  height: 100%;
+}
+
+.correct-bar {
   background: #b9ff9e;
 }
 
 .incorrect-bar {
-  position: fixed;
-  bottom: 0px;
-  left: 0;
-
-  width: 100%;
-  height: 240px;
-  background: #ffbcbc;
+  background: #ffb7b7;
 }
 
 .start-button{
-  position: fixed;
-  bottom: 50%;
-  right: 0;
-  left: 0;
-  margin: 0 auto;
+  margin-top: 6vh;
 
   background-color: #fd90ff;
   color: #000000;
-  font-size: 30px;
+  font-size: 4vh;
 
   border-radius: 50px;
-  width: 250px;
-  height: 100px;
+  width: 20%;
+  height: 15%;
+
+  max-width: 320px;
+  min-width: 150px;
+  
+  max-height: 120px;
 
   border: 5px solid #cccc00;
 }
@@ -451,13 +530,15 @@ template {
 }
 .start-input{
   background-color: #f1f1f1;
-  font-size: 50px;
-  width: 150px;
-  height: 70px;
+  font-size: 4vh;
+  width: 15%;
+  height: auto;
+
+  min-width: 100px;
+  max-width: 150px;
 }
 
 /*スキップボタン*/
-
 #skipButton {
   position: fixed;
   bottom: 20px;
@@ -499,40 +580,28 @@ template {
 /*タイトルの編集*/
 .title{
    font-family: 'MyCustomFont',sans-serif;
-   font-size: 3.5em;
-   /*color: #007bff;*/
-   color: #ffffff;
-   margin-bottom: 20px;
+   font-size: 5vh;
+   color: #007bff;
    font-weight: bold;
-   text-shadow: 1px 1px 10px #000000;
+   /*color: #ffffff;*/
+   /*text-shadow: 1px 1px 10px #000000;*/
 }
 /*サブタイトルの編集*/
 .sub-title{
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 1.5em;
+  font-size: 2.5vh;
   color: #3b3b3b;
-  margin-bottom: 20px;
 }
 /*サブタイトル２の編集*/
 .sub-title2{
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 2em;
+  font-size: 4vh;
   color: #3b3b3b;
-  margin-bottom: 20px;
 }
 /*サブタイトル３の編集*/
 .sub-title3{
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 1em;
-  color: #3b3b3b;
-  margin-bottom: 20px;
-}
-
-/*メインテキスト*/
-.main-text {
-  margin-top: 30px;
-  font-family: 'MyCustomFont',sans-serif;
-  font-size: 2em;
+  font-size: 3vh;
   color: #3b3b3b;
 }
 
@@ -544,13 +613,5 @@ template {
   font-style: normal;
 }
 
-/*背景色の設定*/
-:global(body) {
-  background-image: url('../image/background.jpg');
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  }
 
 </style>

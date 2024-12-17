@@ -1,130 +1,130 @@
 {
     "quizzes": [
       {
-        "image": "/image/apple.jpg",
+        "image": "./image/apple.jpg",
         "words": ["apple", "banana", "kiwi", "grape"],
         "correctIndex": 0,
         "width": 200,
         "height": 200
       },
       {
-        "image": "/image/cat.jpg",
+        "image": "./image/cat.jpg",
         "words": ["dog", "cat", "bird", "fish"],
         "correctIndex": 1,
         "width":200,
         "height":200
       },
       {
-        "image": "/image/bus.jpg",
+        "image": "./image/bus.jpg",
         "words": ["car", "taxi", "bus", "train"],
         "correctIndex": 2,
         "width":200, 
         "height":150
       },
       {
-        "image": "/image/lemon.jpg",
+        "image": "./image/lemon.jpg",
         "words": ["dragonfruit", "pineapple", "orange", "lemon"],
         "correctIndex": 3,
         "width":200, 
         "height":200
       },
       {
-        "image": "/image/lion.jpg",
+        "image": "./image/lion.jpg",
         "words": ["lion", "elephant", "parrot", "grasshopper"],
         "correctIndex": 0,
         "width":200,
         "height":200
       },
       {
-        "image": "/image/bike.jpg",
+        "image": "./image/bike.jpg",
         "words": ["airplane", "bike", "truck", "police car"],
         "correctIndex": 1,
         "width":200,
         "height":200
       },
       {
-        "image": "/image/boat.jpg",
+        "image": "./image/boat.jpg",
         "words": ["ambulance", "tractor", "boat", "ship"],
         "correctIndex": 2,
         "width":200,
         "height":150
       },
       {
-        "image": "/image/rocket.jpg",
+        "image": "./image/rocket.jpg",
         "words": ["helicopter", "tricycle", "raft", "rocket"],
         "correctIndex": 3,
         "width":200,
         "height":200
       },
       {
-        "image": "/image/go.jpg",
+        "image": "./image/go.jpg",
         "words": ["send", "go", "let", "gram"],
         "correctIndex":1,
         "width":200,
         "height":150
       },
       {
-        "image": "/image/come.jpg",
+        "image": "./image/come.jpg",
         "words": ["crime", "do", "just", "come"],
         "correctIndex": 3,
         "width":200,
         "height":150
       },  {
-        "image": "/image/bring.jpg",
+        "image": "./image/bring.jpg",
         "words": ["degree", "keep", "bring", "gain"],
         "correctIndex": 2,
         "width":200,
         "height":200
       },  {
-        "image": "/image/take.jpg",
+        "image": "./image/take.jpg",
         "words": ["woman", "take", "destroy", "pet"],
         "correctIndex": 1,
         "width":200,
         "height":200
       },  {
-        "image": "/image/drive.jpg",
+        "image": "./image/drive.jpg",
         "words": ["sacrifice", "sort", "drive", "grant"],
         "correctIndex": 2,
         "width":200,
         "height":200
       },  {
-        "image": "/image/run.jpg",
+        "image": "./image/run.jpg",
         "words": ["read", "run", "second", "park"],
         "correctIndex": 1,
         "width":150,
         "height":200
       },  {
-        "image": "/image/put.jpg",
+        "image": "./image/put.jpg",
         "words": ["put", "cute", "judge", "settle"],
         "correctIndex": 0,
         "width":200,
         "height":200
       },  {
-        "image": "/image/carry.jpg",
+        "image": "./image/carry.jpg",
         "words": ["carry", "eliminate", "ban", "derive"],
         "correctIndex": 0,
         "width":200,
         "height":200
       },  {
-        "image": "/image/leave.jpg",
+        "image": "./image/leave.jpg",
         "words": ["estimate", "control", "admire", "leave"],
         "correctIndex": 3,
         "width":200,
         "height":200
       },  {
-        "image": "/image/reach.jpg",
+        "image": "./image/reach.jpg",
         "words": ["date", "sax", "reach", "sensus"],
         "correctIndex": 2,
         "width":200,
         "height":150
       },  {
-        "image": "/image/arrive.jpg",
+        "image": "./image/arrive.jpg",
         "words": ["cry", "alive", "tech", "arrive"],
         "correctIndex": 3,
         "width":200,
         "height":150
       },  {
-        "image": "/image/pass.jpg",
+        "image": "./image/pass.jpg",
         "words": ["pass", "through", "tongue", "apply"],
         "correctIndex": 0,
         "width":200,
