@@ -64,15 +64,19 @@
       <!-- 全てのクイズを解き終わった場合の表示 -->
       <div v-if="currentIndex >= totalQuizzesPersonal">
         <!-- スコア表示 -->
-        <div class="result-contener">
-          <h1 class="sub-title3">かかった時間は {{ takenTime }} 秒</h1>
-          <div class="score">
-            <div class="score-text">正解数: {{ correctCount }}</div>
-            <div class="score-text">SCORE: {{ score }}</div>
+        <div class="result-background">
+          <div class="result-contener">
+            <div class="score-contener">
+              <div>SCORE:&nbsp;</div>
+              <div class="score-text">{{ score }}</div>
+            </div>
+            <div>GOOD: {{ correctCount }}</div>
+            <div>MISS: {{ mistakeCount }}</div>
+            <div>TIME: {{ takenTime }} 秒</div>
           </div>
         </div>
 
-        <!-- スコア表示 -->
+        <!-- スコア表示
         <div class="hello">
           <table class="ranking-table">
             <thead>
@@ -91,6 +95,7 @@
             </transition-group>
           </table>
         </div>
+        -->
 
       </div>
     </div>
@@ -121,7 +126,7 @@ const markImagePointer = ref(undefined);
 const isCorrect = ref(undefined)  // 問題に正解しているか、不正解であるか
 
 const startTime = ref(0)
-let mistakeCount = 0
+const mistakeCount = ref(0)
 
 
 // computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
@@ -137,7 +142,7 @@ const progressPercentage = computed(() => isEnd.value ? 100 : (currentIndex.valu
 const takenTime = computed(() => isEnd.value ? Math.floor((Date.now() - startTime.value)/1000) : 0)
 
 // スコアの更新
-const score = computed(() => isEnd.value ? correctCount.value*1000-(mistakeCount*300) : 0)
+const score = computed(() => isEnd.value ? correctCount.value*6500-(mistakeCount.value*1200) : 0)
 
 // ページ離脱時の警告ポップ
 window.onbeforeunload = function(event) {
@@ -150,6 +155,7 @@ window.onbeforeunload = function(event) {
 function startQuiz() {
   isStarted.value = true;
   startTime.value = Date.now()
+  shuffleQuizzes(); // シャッフル
 }
 
 // 単語をクリックしたときに選択
@@ -191,7 +197,7 @@ function checkAnswer() {
     else {
       isCorrect.value = false
       correctText.value = 'あともう少し'
-      mistakeCount++
+      mistakeCount.value++
 
       // 不正解マークを表示
       markImagePointer.value = './image/batu-mark.png'
@@ -248,6 +254,19 @@ const loadQuizzes = async () => {
   quizzes.value = data.quizzes;
   totalQuizzes.value = quizzes.value.length;
 };
+
+// 読み込んだデータをシャッフル
+function shuffleQuizzes() {
+  for (let i = 0; i < totalQuizzes.value; i++) {
+    // 0~問題数の乱数を取得
+    let random = Math.floor(Math.random() * (totalQuizzes.value - 1));
+    
+    // 問題の入れ替え
+    let tmp = quizzes.value[i];
+    quizzes.value[i] = quizzes.value[random];
+    quizzes.value[random] = tmp;
+  }
+}
 
 // Vue.jsにとって重要なデータの読み込みが終了したときにJSONを読み込む
 onMounted(() => {
@@ -328,18 +347,6 @@ body {
   height: 20svh;
   width: 100%;
   border-top: 3px solid #8f8f8f;
-}
-
-/* 結果表示 */
-.result-contener {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-
-  height: 100svh;
-  width: 100%;
 }
 
 /* 空っぽの進捗バー（全体） */
@@ -427,6 +434,9 @@ body {
   .mark-image {
     left: 20%;
   }
+  .result-contener {
+    width: 50%;
+  }
 }
 
 @media screen and (orientation: portrait) {
@@ -435,6 +445,9 @@ body {
   }
   .mark-image {
     left: 5%;
+  }
+  .result-contener {
+    width: 100%;
   }
 }
 
@@ -603,6 +616,42 @@ body {
   font-family: 'MyCustomFont',sans-serif;
   font-size: 3vh;
   color: #3b3b3b;
+}
+
+.result-contener {
+  font-family: 'MyCustomFont',sans-serif;
+  font-size: 4vh;
+  margin-top: 5svh;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  color: #cfcfcf;
+  padding-left: 25px;
+
+  height: 60svh;
+}
+
+.score-contener {
+  font-size: 6vh;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 45px;
+}
+
+.score-text {
+  color: #e94483;
+}
+
+.result-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100svh;
+  width: 100%;
+  background-color: #00000067;
 }
 
 /*フォントの定義*/
