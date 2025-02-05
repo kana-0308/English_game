@@ -3,7 +3,7 @@
     <!-- スタート画面 -->
      <!--hello-->
     <div v-if="!isStarted" class="start-contener">
-      <h1 class="title">English Application</h1>
+      <img class="title" src="/image/title.png" alt="English Application">
       <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
       <input class="start-input" type="number" value="0" min="0" v-model="totalQuizzesPersonal" />
 
@@ -22,9 +22,11 @@
       <div v-if="currentIndex < totalQuizzesPersonal">
 
         <div class="main-contener">
-          <h1 class="sub-title2">画像に合う単語を選んでください。</h1>
+          <h1 class="sub-title2">画像に合う単語を選んでください</h1>
 
-          <img class="image" :src="currentQuiz.image" alt="quiz image">
+          <div class="image-contener">
+            <img class="image" :src="currentQuiz.image" alt="quiz image">
+          </div>
 
           <!-- for文のように 現在扱っているクイズの単語配列を表示している -->
           <div class="word-options">
@@ -352,6 +354,7 @@ body {
   height: 20svh;
   width: 100%;
   border-top: 3px solid #8f8f8f;
+  background-color: #ffffff85;
 }
 
 /* 空っぽの進捗バー（全体） */
@@ -374,8 +377,23 @@ body {
 }
 
 /* 画像 */
+.image-contener {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+
+  height: 50%;
+  width: 100%;
+  background-image: url('../image/image-contener.png');
+  background-repeat:  no-repeat;
+  background-position:center center;
+  background-size: contain;
+}
+
 .image {
-  height: 40%;
+  height: 90%;
   width: auto;
 }
 
@@ -598,12 +616,9 @@ body {
 
 /*タイトルの編集*/
 .title{
-   font-family: 'MyCustomFont',sans-serif;
-   font-size: 6vh;
-   
-   font-weight: bold;
-   color: #f8f8f8;
-   text-shadow: 1px 1px 10px #383838;
+  width: 55%;
+  max-width: 750px;
+  min-width: 300px;
 }
 /*サブタイトルの編集*/
 .sub-title{
@@ -614,7 +629,7 @@ body {
 /*サブタイトル２の編集*/
 .sub-title2{
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 4vh;
+  font-size: clamp(16px, 3.6vh, 35px);
   color: #3b3b3b;
 }
 /*サブタイトル３の編集*/
