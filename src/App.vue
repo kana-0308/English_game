@@ -2,9 +2,13 @@
   <div class="main">
     <!-- スタート画面 -->
      <!--hello-->
+
+     <!-- ホームボタン -->
+    <button class="home-button" @click="resetAll"></button>
+
     <div v-if="!isStarted" class="start-contener">
       <img class="title" src="/image/title.png" alt="English Application">
-      <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
+      <h3 class="sub-title">{{ startText }}</h3>
       <input id="start-input" type="number" value="0" min="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="startQuiz">START</button>
@@ -13,8 +17,10 @@
 
     <div v-else>
       <!-- 進捗がどれくらい進んでいるか確認するバー -->
-      <div class="progress-bar">
-        <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
+      <div class="top-contener">
+        <div class="progress-bar">
+          <div class="progress" :style="{ width: progressPercentage + '%' }"></div>
+        </div>
       </div>
       
 
@@ -140,6 +146,8 @@ const progressPercentage = ref(0);  // 進捗バー
 const fontSizes = ref([]);  // ボタンそれぞれの文字の大きさ
 const buttons = ref([]);  // ボタンの要素データ
 
+const startText = ref("チャレンジする問題数を入力してください");  // スタート画面に表示するテキスト
+
 
 // computerd(), watch():値の行進に応じてイベント発生
 //const currentQuiz = computed(() => quizzes.value[currentIndex.value]);  // クイズのデータ行進
@@ -158,8 +166,35 @@ window.onbeforeunload = function(event) {
   return message;
 };
 
+// ホームボタン
+function resetAll() {
+  if (confirm("スタート画面に戻りますか？　内容は保存されません") == false) return;
+  
+  // リセット
+  isStarted.value = false;
+  currentQuiz.value = null;
+  totalQuizzesPersonal.value = null;
+  currentIndex.value = 0;
+  selectedWordIndex.value = null;
+  correctText.value = undefined;
+  buttonTextPrint.value = 'Check';
+  markImagePointer.value = undefined;
+  takenTime.value = 0;
+  score.value = 0;
+  correctCount.value = 0;
+  mistakeCount.value = 0;
+  progressPercentage.value = 0;
+  startText.value = 'チャレンジする問題数を入力してください';
+}
+
 // 始まり
 function startQuiz() {
+  // 入力した数値が0である場合、解く問題の数が0
+  if (totalQuizzesPersonal.value <= 0) {
+    startText.value = "0より大きい数値を入力してください";
+    return;
+  }
+
   isStarted.value = true;
   startTime = Date.now();  // 時間計測
 
@@ -323,36 +358,40 @@ function resizeText() {
 
   // 重要なデータをしっかり読み込んだうえで処理
   nextTick(() => {
-    fontSizes.value = buttons.value.map((button) => {
-      if (!button) return 32; // デフォルトフォントサイズ
+    // 全てのようそについて個別に文字の大きさを調整
+    buttons.value.forEach((button, index) => {
+      if (!button) {
+        fontSizes.value[index] = 32;
+        return;
+      }
 
-      let fontSize = 32; // 初期フォントサイズ
-      const maxWidth = button.clientWidth - 8; // ボタンの幅（余白を考慮）
+      let fontSize = 32;
+      const maxWidth = button.clientWidth - 32;
 
-      // 仮の要素を作成してテキストの幅を測る
+      // 仮の要素を作って長さを測定
       const tempSpan = document.createElement("span");
       tempSpan.style.visibility = "hidden";
       tempSpan.style.position = "absolute";
       tempSpan.style.whiteSpace = "nowrap";
-      tempSpan.style.fontSize = "32px";
+      tempSpan.style.fontSize = fontSize + "px";
       tempSpan.textContent = button.textContent;
 
-      // 実際に生成
+      // 要素を生成
       document.body.appendChild(tempSpan);
 
-      // 少しづつ小さくして調整
-      while (tempSpan.offsetWidth > maxWidth && fontSize > 5) {
-        console.log("hey");
-        fontSize--; // フォントサイズを小さくする
-        tempSpan.style.fontSize = fontSize + "px";
-      }
+      // ボタンの幅を超えた分少しづつ文字の大きさを小さくする
+      requestAnimationFrame(() => {
+        while (tempSpan.offsetWidth > maxWidth && fontSize > 5) {
+          fontSize--;
+          tempSpan.style.fontSize = fontSize + "px";
+        }
 
-      // 仮の要素を削除
-      document.body.removeChild(tempSpan);
-      return fontSize;
+        button.style.fontSize = fontSize + "px";
+        fontSizes.value[index] = fontSize;
+        document.body.removeChild(tempSpan);
+      });
     });
   });
-  //console.log(fontSizes);
 };
 </script>
 
@@ -387,6 +426,32 @@ body {
   margin: 0;
   border: 0;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+.home-button {
+  position: fixed;
+  top: 4px; 
+  left: 4px;
+  z-index: 1000; /* 他の要素よりも前面に表示 */
+
+  background-image: url("../image/home-button.png");
+  background-repeat:  no-repeat;
+  background-size: cover;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  padding: 0;
+  width: 5svh;
+  height: 5svh;
+  max-width: 64px;
+  max-height: 64px;
+  box-shadow: 0 5px 0 #636363;
+}
+
+.home-button:hover {
+  transform: translate(0, 3px);
+  box-shadow: 0 2px 0 #636363;
 }
 
 .start-contener {
@@ -397,6 +462,12 @@ body {
   flex-direction: column;
 
   height: 100svh;
+  width: 100%;
+}
+
+.top-contener {
+  position: relative;
+  height: 5svh;
   width: 100%;
 }
 
@@ -419,7 +490,7 @@ body {
   text-align: center;
   flex-direction: column;
 
-  height: 12svh;
+  height: 10svh;
   width: 100%;
 }
 
@@ -434,14 +505,14 @@ body {
 
 /* 空っぽの進捗バー（全体） */
 .progress-bar {
-  height: 2.5svh;
+  position: absolute;
+  height: 50%;
   max-height: 30px;
   background-color: #ddd;
   width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  top: 25%;
+  left: 15%;
   border-radius:20px;
-  margin-top: 5px;
 }
 
 /* 実際の進捗バー（長さが変わるところ） */
@@ -493,12 +564,14 @@ body {
   margin-right: 2px;
 
   white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 
   border-radius: 100px;
   border: 2px solid #ffacac;
-
-  line-break: anywhere;
+  min-width: 0;
 }
 
 .word-options button:hover{
@@ -522,8 +595,8 @@ body {
 /*メインテキスト*/
 .main-text {
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 4vh;
-  color: #3b3b3b;
+  font-size: clamp(10px, 5svw, 38px);
+  color: #292929;
 }
 
 /* メインボタン */
@@ -617,12 +690,15 @@ body {
 }
 
 .start-button{
-  margin-top: 6vh;
+  margin-top: 5svh;
 
   background-color: #fd90ff;
   color: #000000;
-  font-size: 4vh;
+  font-size: clamp(16px, 5svw, 30px);
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 50px;
   width: 20%;
   height: 15%;
@@ -644,7 +720,7 @@ body {
 }
 #start-input{
   background-color: #f1f1f1;
-  font-size: 4vh;
+  font-size: clamp(16px, 5svw, 32px);
   width: 15%;
   height: auto;
 
@@ -693,20 +769,20 @@ body {
 
 /*タイトルの編集*/
 .title{
-  width: 55%;
+  width: 60%;
   max-width: 750px;
   min-width: 300px;
 }
 /*サブタイトルの編集*/
 .sub-title{
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 2.5vh;
+  font-size: clamp(16px, 5svw, 32px);
   color: #3b3b3b;
 }
 /*サブタイトル２の編集*/
 .sub-title2{
   font-family: 'MyCustomFont',sans-serif;
-  font-size: clamp(16px, 3.6vh, 35px);
+  font-size: clamp(16px, 6svw, 40px);
   color: #3b3b3b;
   margin-bottom: 5px;
 }
@@ -719,7 +795,7 @@ body {
 
 .result-contener {
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 6vh;
+  font-size: clamp(10px, 10svw, 45px);
   margin-top: 5svh;
   margin-left: auto;
   margin-right: auto;
@@ -733,11 +809,12 @@ body {
 }
 
 .score-contener {
-  font-size: 8vh;
+  font-size: clamp(12px, 12svw, 64px);
   font-weight: bold;
   display: flex;
   flex-direction: row;
   margin-bottom: 45px;
+  overflow: hidden;
 }
 
 .score-text {
