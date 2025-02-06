@@ -154,11 +154,11 @@
         "words": ["lead", "negative", "gravity", "extend"],
         "correctIndex": 3
       },  {
-        "image": "./image/expand.jpg",
+        "image": "./image/expand.png",
         "words": ["neat", "expand", "pretty", "semester"],
         "correctIndex": 1
       },  {
-        "image": "./image/spread.png",
+        "image": "./image/spread.jpeg",
         "words": ["road", "often", "spread", "wide"],
         "correctIndex": 2
       },  {

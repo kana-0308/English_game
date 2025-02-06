@@ -5,7 +5,7 @@
     <div v-if="!isStarted" class="start-contener">
       <img class="title" src="/image/title.png" alt="English Application">
       <h3 class="sub-title">チャレンジする問題数を入力してください</h3>
-      <input class="start-input" type="number" value="0" min="0" v-model="totalQuizzesPersonal" />
+      <input id="start-input" type="number" value="0" min="0" v-model="totalQuizzesPersonal" />
 
       <button class="start-button" @click="startQuiz">START</button>
     </div>
@@ -33,9 +33,12 @@
             <button 
               v-for="(word, index) in currentQuiz.words" 
               :key="index" 
+              ref="buttons"
               @click="seletWord(index)"
               v-bind:class="{ selected: selectedWordIndex === index }"
+              :style="{ fontSize: fontSizes[index] + 'px' }"
             >
+              <!-- ボタンのテキスト -->
               {{ word }}
             </button>
           </div>
@@ -107,44 +110,46 @@
 
 
 <script setup>//Javascript
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, watch, nextTick } from 'vue';
 
 const quizzes = ref([]);
 
 // 変数
-const isStarted = ref(false)  // クイズが始まっているかどうかのフラグ変数
+const isStarted = ref(false);  // クイズが始まっているかどうかのフラグ変数
+const isCorrect = ref(undefined);  // 問題に正解しているか、不正解であるか
+
+const currentQuiz = ref(null);
 const totalQuizzes = ref(0);  // 今回学習するクイズの問題数
 const totalQuizzesPersonal = ref(null);  //問題数を入力してもらう用
 const currentIndex = ref(0);  // 現在学習しているクイズの識別番号（現在完了しているクイズの数）
 const selectedWordIndex = ref(null);  // 選択している単語
-//const buttonTextC = ref('Check');  // 確認ボタンのテキスト
-//const buttonTextN = ref('Next')
-const correctText = ref(undefined)
-//const incorrectText = ref('False.')
-//const correctAnswer = ref(undefined)
-const buttonTextPrint = ref('Check') //表示用ボタンのテキスト
-const correctCount = ref(0)
+const correctText = ref(undefined);  // メインボタンを押した際に出力されるテキスト
+const buttonTextPrint = ref('Check'); //表示用ボタンのテキスト
+
 const markImagePointer = ref(undefined);
-const isCorrect = ref(undefined)  // 問題に正解しているか、不正解であるか
 
-const startTime = ref(0)
-const mistakeCount = ref(0)
+// eslint-disable-next-line no-unused-vars
+let startTime = 0;  // 時間測定用、開始時間
+const takenTime = ref(0);  // 時間測定
+const score = ref(0); // スコア
+const correctCount = ref(0);   // 正解数
+const mistakeCount = ref(0); // 間違えた数
+
+const progressPercentage = ref(0);  // 進捗バー
+
+const fontSizes = ref([]);  // ボタンそれぞれの文字の大きさ
+const buttons = ref([]);  // ボタンの要素データ
 
 
-// computed関数により 変数currentIndexが更新された場合currentQuizオブジェクトに現在扱うクイズのデータを代入
-const currentQuiz = computed(() => quizzes.value[currentIndex.value]);
+// computerd(), watch():値の行進に応じてイベント発生
+//const currentQuiz = computed(() => quizzes.value[currentIndex.value]);  // クイズのデータ行進
+// const isEnd = computed(() => currentIndex.value >= totalQuizzesPersonal.value ? true : false) // クイズの終了
+// const progressPercentage = computed(() => isEnd.value ? 100 : (currentIndex.value / totalQuizzesPersonal.value) * 100)  // バーの更新
+// const takenTime = computed(() => isEnd.value ? Math.floor((Date.now() - startTime.value)/1000) : 0) // 時間の更新
+// const score = computed(() => isEnd.value ? correctCount.value*6500-(mistakeCount.value*1200) : 0) // スコアの更新
 
-// クイズの終了
-const isEnd = computed(() => currentIndex.value >= totalQuizzesPersonal.value ? true : false)
-
-// computed関数によりバーの更新
-const progressPercentage = computed(() => isEnd.value ? 100 : (currentIndex.value / totalQuizzesPersonal.value) * 100)
-
-// 時間の更新
-const takenTime = computed(() => isEnd.value ? Math.floor((Date.now() - startTime.value)/1000) : 0)
-
-// スコアの更新
-const score = computed(() => isEnd.value ? correctCount.value*6500-(mistakeCount.value*1200) : 0)
+// 文字のサイズを調整
+watch(currentQuiz, resizeText); 
 
 // ページ離脱時の警告ポップ
 window.onbeforeunload = function(event) {
@@ -156,13 +161,19 @@ window.onbeforeunload = function(event) {
 // 始まり
 function startQuiz() {
   isStarted.value = true;
-  startTime.value = Date.now()
+  startTime = Date.now();  // 時間計測
+
+  // クイズの準備
   shuffleQuizzes(); // シャッフル
+  currentQuiz.value = quizzes.value[0];
 
   // 入力される問題数が全ての問題数を超えられない
   if (totalQuizzes.value < totalQuizzesPersonal.value) {
     totalQuizzesPersonal.value = totalQuizzes.value;
   }
+
+  // 文字のサイズを調整
+  resizeText();
 }
 
 // 単語をクリックしたときに選択
@@ -217,17 +228,24 @@ function checkAnswer() {
     currentIndex.value++
     isCorrect.value = undefined
 
-    // 単語の選択をリセット
+    // リセット
     selectedWordIndex.value = null
-
-    // メインテキストをリセット
     correctText.value = undefined
-
-    // ボタンの文字を'Check'に変更
     buttonTextPrint.value = 'Check'
-
-    // マークを非表示
     markImagePointer.value = './image/none-mark.png'
+
+    // 更新
+    currentQuiz.value = quizzes.value[currentIndex.value] // クイズデータの更新
+    progressPercentage.value = (currentIndex.value / totalQuizzesPersonal.value) * 100  // 進捗バーの更新
+
+    // クイズが終了したら
+    if (currentIndex.value >= totalQuizzesPersonal.value) {
+      // スコアの更新
+      score.value = correctCount.value*6500 - (mistakeCount.value*1200)
+
+      // 時間の更新
+      takenTime.value = Math.floor( (Date.now() - startTime) / 1000 )
+    }
   }
 
   /*
@@ -275,10 +293,67 @@ function shuffleQuizzes() {
   }
 }
 
-// Vue.jsにとって重要なデータの読み込みが終了したときにJSONを読み込む
+// 事前に画像を読み込む
+const preloadImages = (urls) => {
+  urls.forEach(url => {
+    const img = new Image();
+    img.src = url;
+  });
+};
+
+// 事前に読み込む画像リスト
+const urlImage = [
+  "./image/background.jpg",
+  "./image/check-mark.png",
+  "./image/batu-mark.png",
+  "./image/none-mark.png",
+  "./image/image-contener.png"
+];
+
+
+// Vue.jsにとって重要なデータの読み込みが終了したときにJ読み込む
 onMounted(() => {
   loadQuizzes();
+  preloadImages(urlImage);
+  window.addEventListener("resize", resizeText); // ウィンドウリサイズ時に再調整
 });
+
+// 文字の大きさをボタンの幅に合わせて調整
+function resizeText() {
+
+  // 重要なデータをしっかり読み込んだうえで処理
+  nextTick(() => {
+    fontSizes.value = buttons.value.map((button) => {
+      if (!button) return 32; // デフォルトフォントサイズ
+
+      let fontSize = 32; // 初期フォントサイズ
+      const maxWidth = button.clientWidth - 8; // ボタンの幅（余白を考慮）
+
+      // 仮の要素を作成してテキストの幅を測る
+      const tempSpan = document.createElement("span");
+      tempSpan.style.visibility = "hidden";
+      tempSpan.style.position = "absolute";
+      tempSpan.style.whiteSpace = "nowrap";
+      tempSpan.style.fontSize = "32px";
+      tempSpan.textContent = button.textContent;
+
+      // 実際に生成
+      document.body.appendChild(tempSpan);
+
+      // 少しづつ小さくして調整
+      while (tempSpan.offsetWidth > maxWidth && fontSize > 5) {
+        console.log("hey");
+        fontSize--; // フォントサイズを小さくする
+        tempSpan.style.fontSize = fontSize + "px";
+      }
+
+      // 仮の要素を削除
+      document.body.removeChild(tempSpan);
+      return fontSize;
+    });
+  });
+  //console.log(fontSizes);
+};
 </script>
 
 
@@ -384,7 +459,7 @@ body {
   text-align: center;
   flex-direction: column;
 
-  height: 50%;
+  height: 55%;
   width: 100%;
   background-image: url('../image/image-contener.png');
   background-repeat:  no-repeat;
@@ -393,13 +468,13 @@ body {
 }
 
 .image {
-  height: 90%;
+  height: 85%;
   width: auto;
 }
 
 /* 選択候補の単語をきれいに並べる */
 .word-options {
-  margin: 15px;
+  margin: 10px;
   width: 100%;
   height: 25%;
   max-height: 110px;
@@ -411,12 +486,14 @@ body {
 
 /* 単語のボタンのデザイン */
 .word-options button {
-  width: 24%;
-  max-width: 150px;
   background-color: #efefef;
   color: #000000;
-  font-size: 2.5vh;
+  width: 24%;
+  max-width: 200px;
   margin-right: 2px;
+
+  white-space: nowrap;
+  text-align: center;
 
   border-radius: 100px;
   border: 2px solid #ffacac;
@@ -550,10 +627,10 @@ body {
   width: 20%;
   height: 15%;
 
-  max-width: 320px;
+  max-width: 300px;
   min-width: 150px;
   
-  max-height: 120px;
+  max-height: 100px;
 
   border: 5px solid #cccc00;
 }
@@ -565,7 +642,7 @@ body {
   background-color: #feadff;
   border: 5px solid #fbfb33;
 }
-.start-input{
+#start-input{
   background-color: #f1f1f1;
   font-size: 4vh;
   width: 15%;
@@ -631,6 +708,7 @@ body {
   font-family: 'MyCustomFont',sans-serif;
   font-size: clamp(16px, 3.6vh, 35px);
   color: #3b3b3b;
+  margin-bottom: 5px;
 }
 /*サブタイトル３の編集*/
 .sub-title3{
@@ -641,7 +719,7 @@ body {
 
 .result-contener {
   font-family: 'MyCustomFont',sans-serif;
-  font-size: 4vh;
+  font-size: 6vh;
   margin-top: 5svh;
   margin-left: auto;
   margin-right: auto;
@@ -655,7 +733,7 @@ body {
 }
 
 .score-contener {
-  font-size: 6vh;
+  font-size: 8vh;
   font-weight: bold;
   display: flex;
   flex-direction: row;
