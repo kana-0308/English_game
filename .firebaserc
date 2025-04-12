@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "english-app-pbl"
+  },
+  "targets": {
+    "english-app-pbl": {
+      "hosting": {
+        "picture-game": [
+          "english-picture-game"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

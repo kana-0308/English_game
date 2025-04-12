@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "target": "picture-game",
+    "public": "docs",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
