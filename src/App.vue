@@ -499,6 +499,8 @@ body {
   border: 2px solid #ffacac;
 
   line-break: anywhere;
+
+  font-family: 'MyCustomFont';
 }
 
 .word-options button:hover{
