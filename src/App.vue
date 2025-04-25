@@ -756,7 +756,7 @@ body {
 /*フォントの定義*/
 @font-face{
   font-family:'MyCustomFont';
-  src: url('../fonts/PixelMplus12-Regular.ttf')format('truetype');
+  src: url('../fonts/UDDigiKyokashoN-B.ttc')format('truetype');
   font-weight: normal;
   font-style: normal;
 }
