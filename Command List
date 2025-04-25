@@ -1,0 +1,9 @@
+英語アプリ反映方法
+ブランチを新たに作成して変更する
+ソース管理で変更したいものを選んでコミット
+ターミナルでgit push origin image
+GitHubでコミット
+リモートに変更完了
+git pull origin main --rebaseでリモートの変更点をメインにも反映させる
+作業が完了したブランチはgit branch -d imageで削除
+どうしても消えない場合は、git branch -D image no
