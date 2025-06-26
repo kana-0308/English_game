@@ -1,10 +1,12 @@
 <template>
-  <div id="app">
+  <v-app>
+    <v-main class="kyokasho-font-r background">
 
-    <!-- ルートとマッチしたコンポーネントがここへ描画されます -->
-    <router-view></router-view>
+      <!-- ルートとマッチしたコンポーネントがここへ描画されます -->
+      <router-view></router-view>
 
-  </div>
+    </v-main>
+  </v-app>
 </template>
 
 <script setup>

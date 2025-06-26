@@ -1,0 +1,14 @@
+@font-face {
+    font-family: UDDigiKyokashoN-B;
+    src: url('../fonts/UDDigiKyokashoN-B.ttc')format('truetype');
+} 
+@font-face {
+    font-family: UDDigiKyokashoN-R;
+    src: url('../fonts/UDDigiKyokashoN-R.ttc')format('truetype');
+}
+.kyokasho-font-b {
+    font-family: UDDigiKyokashoN-B;
+}
+.kyokasho-font-r {
+    font-family: UDDigiKyokashoN-R;
+}

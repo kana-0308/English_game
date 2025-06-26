@@ -1,0 +1,10 @@
+[
+    {
+        "name": "覚えておきたい単語集",
+        "path": "normal.json"
+    },
+    {
+        "name": "お仕事に関する単語集",
+        "path": "job.json"
+    }
+]

@@ -8,7 +8,7 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/game/:number',
+    path: '/game',
     name: 'game',
     component: () => import('./views/GamePage.vue'),
   },

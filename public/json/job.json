@@ -1,0 +1,9 @@
+{
+    "quizzes": [
+        {
+            "image": "./image/doctor.png",
+            "words": ["programmer", "idol", "doctor", "police"],
+            "correctIndex": 2
+        }
+    ]
+}
