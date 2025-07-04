@@ -15,6 +15,7 @@
     <v-text-field v-model="quizNumber" label="数字を入力" type="number" bg-color="#ffffffc0"></v-text-field>
     <v-btn class="start-btn" @click="startQuiz">START</v-btn>
   </div>
+  
 </v-container>
 </template>
 

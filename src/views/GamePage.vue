@@ -148,12 +148,12 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useJsonDataStore useResultDataStore } from '@/stores/dataStore'
+import { useJsonDataStore } from '@/stores/dataStore'
 
 const route = useRoute()
 const router = useRouter()
 const jsonStore = useJsonDataStore()
-const resultStore = useResultDataStore()
+//const resultStore = useResultDataStore()
 
 let quizNumberAll // 選んだ単語集に存在する単語全ての数
 let quizNumber // 今回学ぶクイズの数
