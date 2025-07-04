@@ -148,11 +148,12 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useJsonDataStore } from '@/stores/dataStore'
+import { useJsonDataStore useResultDataStore } from '@/stores/dataStore'
 
 const route = useRoute()
 const router = useRouter()
-const dataStore = useJsonDataStore()
+const jsonStore = useJsonDataStore()
+const resultStore = useResultDataStore()
 
 let quizNumberAll // 選んだ単語集に存在する単語全ての数
 let quizNumber // 今回学ぶクイズの数
@@ -198,7 +199,7 @@ function initialize() {
   startTime = Date.now();
 
   // クイズデータの初期化
-  quizzes = dataStore.jsonData.quizzes; // jsonデータの受け取り
+  quizzes = jsonStore.jsonData.quizzes; // jsonデータの受け取り
   quizNumberAll = quizzes.length;
   quizNumber = Number(route.query.number); // 今回解くクイズの数受け取り
   shuffleQuizzes();
@@ -268,6 +269,8 @@ function checkAnswer() {
 
       // 時間の更新
       takenTime.value = Math.floor( (Date.now() - startTime) / 1000 )
+
+      // データストアに送信
 
       // 結果発表に移る
       router.push('/result')
