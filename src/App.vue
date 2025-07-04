@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-main class="background">
+    <v-main class="background kyokasho-font-r">
 
-      <!-- ルートとマッチしたコンポーネントがここへ描画されます -->
+      <!-- ルートとマッチした.コンポーネントがここへ描画されます -->
       <router-view></router-view>
 
     </v-main>
