@@ -2,10 +2,10 @@
 <v-container class="center">
   <div width="100vw">
     <p>CLEAR</p>
-    <p>SCORE</p>
-    <p>GOOD</p>
-    <p>MISS</p>
-    <p>TIME</p>
+    <p>SCORE:{{ resultStore.score }}</p>
+    <p>GOOD:{{ resultStore.correctCount }}</p>
+    <p>MISS:{{ resultStore.mistakeCount }}</p>
+    <p>TIME:{{ resultStore.time }} s</p>
   </div>
 </v-container>
 
@@ -19,5 +19,7 @@
 
 
 <script setup>
+import { useResultDataStore } from '@/stores/dataStore'
+const resultStore = useResultDataStore()
 
 </script>
