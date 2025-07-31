@@ -148,12 +148,12 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useJsonDataStore } from '@/stores/dataStore'
+import { useJsonDataStore, useResultDataStore } from '@/stores/dataStore'
 
 const route = useRoute()
 const router = useRouter()
 const jsonStore = useJsonDataStore()
-//const resultStore = useResultDataStore()
+const resultStore = useResultDataStore()
 
 let quizNumberAll // 選んだ単語集に存在する単語全ての数
 let quizNumber // 今回学ぶクイズの数
@@ -161,6 +161,8 @@ let currentIndex = 0  // 現在学習しているクイズの識別番号（現�
 const selectedWordIndex = ref(null)  // 選択している単語
 
 let quizzes = []
+let quizzeIndexs = []
+let mistakeIndexs = []
 const currentQuiz = ref(null) // 現在取り組んでいるクイズのデータ
 
 const isCorrect = ref(undefined)  // 問題に正解しているか、不正解であるか
@@ -170,10 +172,10 @@ const buttonText = ref('Check') //表示用ボタンのテキスト
 const markImagePointer = ref(undefined)
 
 let startTime = 0  // 時間測定用、開始時間
-const takenTime = ref(0)  // 時間測定
-const score = ref(0) // スコア
-const correctCount = ref(0)   // 正解数
-const mistakeCount = ref(0) // 間違えた数
+let takenTime  // 時間測定
+let score // スコア
+let correctCount = 0   // 正解数
+let mistakeCount = 0 // 間違えた数
 
 const progressPercentage = ref(0)  // 進捗バー
 
@@ -237,7 +239,7 @@ function checkAnswer() {
     if (selectedWordIndex.value == currentQuiz.value.correctIndex) {
       informText.value = 'よくできました！！'
       isCorrect.value = true
-      correctCount.value++
+      correctCount++
 
       // ボタンの文字を'Next'に変更
       buttonText.value = 'Next'
@@ -250,7 +252,10 @@ function checkAnswer() {
     else {
       isCorrect.value = false
       informText.value = 'あともう少し'
-      mistakeCount.value++
+      mistakeCount++
+      mistakeIndexs.push(quizzeIndexs[currentIndex])
+
+      buttonText.value = 'Next'
 
       // 不正解マークを表示
       markImagePointer.value = './image/batu-mark.png'
@@ -265,13 +270,14 @@ function checkAnswer() {
     // クイズが終了したら
     if (currentIndex >= quizNumber) {
       // スコアの更新
-      score.value = correctCount.value*6500 - (mistakeCount.value*1200)
+      score = correctCount*6500 - (mistakeCount*1200)
 
       // 時間の更新
-      takenTime.value = Math.floor( (Date.now() - startTime) / 1000 )
+      takenTime = Math.floor( (Date.now() - startTime) / 1000 )
 
       // データストアに送信
-
+      resultStore.setResultData(score, takenTime, correctCount, mistakeCount, mistakeIndexs)
+      
       // 結果発表に移る
       router.push('/result')
     }
@@ -285,7 +291,7 @@ function checkAnswer() {
     markImagePointer.value = './image/none-mark.png'
 
     // 更新
-    currentQuiz.value = quizzes[currentIndex] // クイズデータの更新
+    currentQuiz.value = quizzes[ quizzeIndexs[currentIndex] ] // クイズデータの更新
     progressPercentage.value = (currentIndex / quizNumber) * 100  // 進捗バーの更新
     resizeText(); // 単語の文字のサイズを調整
   }
@@ -293,14 +299,17 @@ function checkAnswer() {
 
 // 読み込んだデータをシャッフル
 function shuffleQuizzes() {
+  for(let i = 0; i < quizNumberAll; i++){
+    quizzeIndexs[i] = i
+  }
   for (let i = 0; i < quizNumberAll; i++) {
     // 0~問題数の乱数を取得
     let random = Math.floor(Math.random() * (quizNumberAll - 1));
-    
+
     // 問題の入れ替え
-    let tmp = quizzes[i];
-    quizzes[i] = quizzes[random];
-    quizzes[random] = tmp;
+    let tmp = quizzeIndexs[i];
+    quizzeIndexs[i] = quizzeIndexs[random];
+    quizzeIndexs[random] = tmp;
   }
 }
 
