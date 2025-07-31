@@ -16,7 +16,12 @@ const routes = [
     path: '/result',
     name: 'result',
     component: () => import('./views/ResultPage.vue'),
-  }
+  },
+  {
+    path: '/result-detail',
+    name: 'result-detail',
+    component: () => import('./views/ResultDetail.vue'),
+  },
 ]
 
 const router = createRouter({

@@ -15,18 +15,22 @@ export const useJsonDataStore = defineStore('jsonData', {
 export const useResultDataStore = defineStore('resultData', {
   state: () => ({
     score: 0,
-    time: 0,
+    takenTime: 0,
     correctCount: 0,
     mistakeCount: 0,
     mistakeIndexs: null,
+    incorrectWords: [],
   }),
   actions: {
-    setResultData(score, time, correctCount, mistakeCount, mistakeIndexs) {
+    setResultData(score, takenTime, correctCount, mistakeCount, mistakeIndexs) {
       this.score = score
-      this.time = time
+      this.takenTime = takenTime
       this.correctCount = correctCount
       this.mistakeCount = mistakeCount
       this.mistakeIndexs = mistakeIndexs
-    }
+    },
+    addIncorrectWord(word){
+      this.incorrectWords.push(word);
+    } 
   }
-})
+});
