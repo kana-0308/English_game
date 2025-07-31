@@ -18,13 +18,15 @@ export const useResultDataStore = defineStore('resultData', {
     time: 0,
     correctCount: 0,
     mistakeCount: 0,
+    mistakeIndexs: null,
   }),
   actions: {
-    setResultData(score, time, correctCount, mistakeCount) {
+    setResultData(score, time, correctCount, mistakeCount, mistakeIndexs) {
       this.score = score
       this.time = time
       this.correctCount = correctCount
       this.mistakeCount = mistakeCount
+      this.mistakeIndexs = mistakeIndexs
     }
   }
 })
