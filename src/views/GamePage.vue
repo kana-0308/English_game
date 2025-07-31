@@ -255,6 +255,10 @@ function checkAnswer() {
       mistakeCount++
       mistakeIndexs.push(quizzeIndexs[currentIndex])
 
+      // ★追記: ユーザーが選択した単語をストアに保存★
+      const selectedWord = currentQuiz.value.words[selectedWordIndex.value];
+      resultStore.addIncorrectWord(selectedWord);
+
       buttonText.value = 'Next'
 
       // 不正解マークを表示
