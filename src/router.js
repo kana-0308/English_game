@@ -27,9 +27,13 @@ const routes = [
         name: 'result',
         component: () => import('./views/ResultPage.vue'),
       },
+      {
+        path: 'result-detail',
+        name: 'result-detail',
+        component: () => import('./views/ResultDetail.vue'),
+      },
     ]
   },
-  {
     path: '/word-manager',
     name: 'word-manager',
     component: WordManager,
