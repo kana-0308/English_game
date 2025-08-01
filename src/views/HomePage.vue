@@ -1,4 +1,5 @@
 <template>
+<v-btn to="/word-manager" fixed top left class="ma-4">単語集の作成</v-btn>
 <v-container height="90dvh" max-width="800px" class="center">
   <div class="w-100">
     <v-img src="/image/title.png" alt="logo"></v-img>
@@ -15,7 +16,6 @@
     <v-text-field v-model="quizNumber" label="数字を入力" type="number" bg-color="#ffffffc0"></v-text-field>
     <v-btn class="start-btn" @click="startQuiz">START</v-btn>
   </div>
-  
 </v-container>
 </template>
 
