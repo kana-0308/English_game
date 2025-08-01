@@ -34,6 +34,7 @@ const routes = [
       },
     ]
   },
+  {
     path: '/word-manager',
     name: 'word-manager',
     component: WordManager,
