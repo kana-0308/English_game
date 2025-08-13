@@ -1,6 +1,7 @@
 <template>
-  <v-navigation-drawer permanent>
-    <v-toolbar flat>
+  <v-navigation-drawer permanent class="third-color">
+    <v-btn to="/" class="floating-btn ma-4 thema-color" icon="mdi-home" size="x-large"></v-btn>
+    <v-toolbar flat class="sub-color">
       <v-toolbar-title>単語集リスト</v-toolbar-title>
     </v-toolbar>
 
@@ -9,10 +10,9 @@
     <div class="pa-4">
       <v-btn 
         @click="addWordbook"
-        color="primary"
         block
         size="large"
-        class="text-none"
+        class="text-none kyokasho-font-b thema-color"
       >
         <v-icon left>mdi-plus</v-icon>
         新規追加
@@ -22,10 +22,10 @@
     <v-list dense nav>
       <v-list-item
         v-for="wordbook in wordbooks"
-        :key="wordbook.path"
+        :key="wordbook.documentName"
         link
-        :value="wordbook.path"
-        :active="selectedWordbook && selectedWordbook.path === wordbook.path"
+        :value="wordbook.documentName"
+        :active="selectedWordbook && selectedWordbook.documentName === wordbook.documentName"
         @click="selectWordbook(wordbook)"
       >
         <v-list-item-title>{{ wordbook.name }}</v-list-item-title>
@@ -40,10 +40,10 @@
   <v-main>
     <v-container fluid>
       <div v-if="selectedWordbook">
-        <v-toolbar flat>
+        <v-toolbar flat class="sub-color">
           <v-toolbar-title>{{ selectedWordbook.name }}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="openAddWordDialog" size="large">
+          <v-btn class="thema-color" @click="openAddWordDialog" size="large">
             <v-icon left>mdi-plus</v-icon>
             新規単語追加
           </v-btn>
@@ -61,7 +61,7 @@
           >
             <v-card>
               <v-img
-                :src="word.image || 'https://placehold.co/600x400/EEE/31343C?text=No+Image'"
+                :src="word.imagePath || 'https://placehold.co/600x400/EEE/31343C?text=No+Image'"
                 height="200px"
                 cover
               ></v-img>
@@ -111,7 +111,7 @@
                 @dragleave.prevent="isDragging = false"
                 @drop.prevent="handleFileDrop"
               >
-                <v-img v-if="editableWord.image" :src="editableWord.image" max-height="150" contain class="mb-4"></v-img>
+                <v-img v-if="editableWord.imagePath" :src="editableWord.imagePath" max-height="150" contain class="mb-4"></v-img>
                 <p>画像をここにドラッグ＆ドロップ</p>
                 <p class="text-caption">または</p>
                 <v-btn small @click="triggerFileInput">ファイルを選択</v-btn>
@@ -145,7 +145,9 @@
 
   <v-dialog v-model="wordbookDialog.show" max-width="500px">
       <v-card>
-          <v-card-title>単語集の名前を編集</v-card-title>
+          <v-card-title>
+            <span class="headline">{{ wordbookDialog.isEdit ? '単語集の名前を編集' : '新しい単語集の追加' }}</span>
+          </v-card-title>
           <v-card-text>
               <v-text-field v-model="wordbookDialog.name" label="単語集名"></v-text-field>
           </v-card-text>
@@ -172,6 +174,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { db } from '@/firebase'
+import { arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
 
 // --- リアクティブな状態定義 ---
 
@@ -194,7 +198,8 @@ const wordDialog = ref({
 // 単語集名編集ダイアログの状態
 const wordbookDialog = ref({
     show: false,
-    path: '',
+    isEdit: false,
+    documentName: '',
     name: ''
 });
 
@@ -202,54 +207,63 @@ const wordbookDialog = ref({
 const deleteDialog = ref({
     show: false,
     type: '', // 'wordbook' or 'word'
-    path: '', // 単語集の場合
+    documentName: '', // 単語集の場合
     index: null, // 単語の場合
     message: ''
 });
 
 // 編集中の単語データ
 const editableWord = ref({
-  image: null,
+  imagePath: null,
   words: ['', '', '', ''],
   correctIndex: 0,
 });
+
+// 単語の編集時に使用する古いデータ削除用
+let removeTargetWord = {
+  imagePath: null,
+  words: ['', '', '', ''],
+  correctIndex: 0,
+}
 
 // --- JSONファイルの読み書き関数 (ここではダミーの実装) ---
 // 実際にはサーバーサイドのAPI経由でファイル操作を行う必要があるため、
 // ここではlocalStorageを模倣した関数を実装します。
 // 本番環境では、これらの関数をAPI呼び出しに置き換えてください。
-const FILE_LIST_PATH = 'file-list.json';
-
-const fetchJson = async (path) => {
+const fetchWordbook = async (documentName) => {
     try {
-        // publicフォルダからの相対パスを想定
-        const response = await fetch(`/json/${path}`);
-        if (!response.ok) {
-            // ファイルが存在しない場合は空のデータを返す
-            return { quizzes: [] };
-        }
-        return await response.json();
-    } catch (error) {
-        console.error(`Failed to fetch JSON from ${path}:`, error);
+      const docRef = doc(db, 'wordbooks', documentName);
+      const docSnapshot = await getDoc(docRef);
+      if (!docSnapshot.exists()) {
         return { quizzes: [] };
+      }
+      return docSnapshot.data();
+    } catch (error) {
+      console.error(`Failed to fetch Document from ${documentName}:`, error);
+      return { quizzes: [] };
     }
 };
 
-const saveJson = async (path, data) => {
+const saveDocument = async (collection, documentName, data) => {
     // サーバーサイドでのJSONファイル書き込みを想定したダミー実装
     // Vue.jsのアプリケーションから直接ファイルシステムを操作することはできないため、
     // 実際にはサーバーサイドのAPIエンドポイントを呼び出す必要があります。
     // 例: await axios.post('/api/save-json', { path, data });
-    console.log(`Saving to ${path}:`, data);
-    
-    // デモンストレーションのため、localStorageで擬似的に保存
-    localStorage.setItem(`json-${path}`, JSON.stringify(data));
+    console.log(`Saving to ${documentName }:`, data);
+    await setDoc(doc(db, collection, documentName), data);
 };
 
 const loadData = async () => {
-    // file-list.jsonを読み込む
-    const data = await fetchJson(FILE_LIST_PATH);
-    wordbooks.value = data;
+    // 単語集のリストデータを読み込み
+    // リアルタイムで監視し、イベントリスナーに再読み込みを設定
+    const querySnapshot = await getDocs(collection(db, "wordbookList"));
+    wordbooks.value = querySnapshot.docs.map(doc => ({
+      ...doc.data()
+    }));
+    // onSnapshot(collection(db, "wordbookList"), (snapshot) => {
+    //   snapshot.docs.forEach(doc => {
+    //     wordbooks.value.push(doc.data());
+    // });
 
     // 最初の単語集を選択状態にする
     if (wordbooks.value.length > 0) {
@@ -262,26 +276,20 @@ const loadData = async () => {
 
 // 新しい単語集を追加
 const addWordbook = async () => {
-  const newFileName = `wordbook-${Date.now()}.json`;
+  const newDocumentName = `wordbook-${Date.now()}`;
   const newWordbookMeta = {
     name: `新しい単語集 ${wordbooks.value.length + 1}`,
-    path: newFileName,
+    documentName : newDocumentName,
   };
-  
-  wordbooks.value.push(newWordbookMeta);
-  
-  // 新しい単語集ファイルを作成（空のデータで保存）
-  await saveJson(newFileName, { quizzes: [] });
-  await saveJson(FILE_LIST_PATH, wordbooks.value);
-  
-  selectWordbook(newWordbookMeta);
-  openEditWordbookDialog(newWordbookMeta);
+
+  // 新規作成ダイアログを開く
+  openAddWordbookDialog(newWordbookMeta);
 };
 
 // 単語集を選択し、その単語データを読み込む
 const selectWordbook = async (wordbookMeta) => {
   if (wordbookMeta) {
-    const wordbookData = await fetchJson(wordbookMeta.path);
+    const wordbookData = await fetchWordbook(wordbookMeta.documentName);
     selectedWordbook.value = { ...wordbookMeta, ...wordbookData };
   } else {
     selectedWordbook.value = null;
@@ -290,28 +298,51 @@ const selectWordbook = async (wordbookMeta) => {
 
 // 単語集名編集ダイアログを開く
 const openEditWordbookDialog = (wordbook) => {
-    wordbookDialog.value.path = wordbook.path;
-    wordbookDialog.value.name = wordbook.name;
-    wordbookDialog.value.show = true;
+  wordbookDialog.value.documentName  = wordbook.documentName;
+  wordbookDialog.value.name = wordbook.name;
+  wordbookDialog.value.show = true;
+  wordbookDialog.value.isEdit = true;
+};
+
+// 単語集新規作成ダイアログを開く
+const openAddWordbookDialog = (wordbook) => {
+  wordbookDialog.value.documentName  = wordbook.documentName;
+  wordbookDialog.value.name = wordbook.name;
+  wordbookDialog.value.show = true;
+  wordbookDialog.value.isEdit = false;
 };
 
 // 単語集名を更新
 const updateWordbookName = async () => {
-    const book = wordbooks.value.find(wb => wb.path === wordbookDialog.value.path);
+  if (wordbookDialog.value.isEdit) {
+    // 単語集の編集
+    const book = wordbooks.value.find(wb => wb.documentName === wordbookDialog.value.documentName);
     if (book) {
         book.name = wordbookDialog.value.name;
-        await saveJson(FILE_LIST_PATH, wordbooks.value);
-        if (selectedWordbook.value && selectedWordbook.value.path === book.path) {
+        await saveDocument('wordbookList', book.documentName, book);
+        if (selectedWordbook.value && selectedWordbook.value.documentName === book.documentName) {
             selectedWordbook.value.name = book.name;
         }
     }
-    wordbookDialog.value.show = false;
+  } else {
+    // 単語集の新規作成
+    const newWordbookMeta = {
+      name: wordbookDialog.value.name,
+      documentName : wordbookDialog.value.documentName,
+    };
+    wordbooks.value.push(newWordbookMeta);
+    // 新しい単語集ファイルを作成（空のデータで保存）
+    await saveDocument('wordbooks', newWordbookMeta.documentName, { quizzes: [] });
+    await saveDocument('wordbookList', newWordbookMeta.documentName, newWordbookMeta);
+    selectWordbook(newWordbookMeta);
+  }
+  wordbookDialog.value.show = false;
 };
 
 // 単語集削除ダイアログを開く
 const openDeleteWordbookDialog = (wordbook) => {
     deleteDialog.value.type = 'wordbook';
-    deleteDialog.value.path = wordbook.path;
+    deleteDialog.value.documentName = wordbook.documentName;
     deleteDialog.value.message = `単語集「${wordbook.name}」を削除します。よろしいですか？`;
     deleteDialog.value.show = true;
 };
@@ -321,10 +352,15 @@ const openDeleteWordbookDialog = (wordbook) => {
 // 空の単語フォームを準備する
 const resetEditableWord = () => {
   editableWord.value = {
-    image: null,
+    imagePath: null,
     words: ['', '', '', ''],
     correctIndex: 0,
   };
+  removeTargetWord = {
+    imagePath: null,
+    words: ['', '', '', ''],
+    correctIndex: 0,
+  }
 };
 
 // 新規単語追加ダイアログを開く
@@ -338,6 +374,7 @@ const openAddWordDialog = () => {
 const openEditWordDialog = (word, index) => {
   // 編集用にデータをディープコピーする
   editableWord.value = JSON.parse(JSON.stringify(word));
+  removeTargetWord = word;
   wordDialog.value.isEdit = true;
   wordDialog.value.editIndex = index;
   wordDialog.value.show = true;
@@ -353,15 +390,18 @@ const closeWordDialog = () => {
 const saveWord = async () => {
   if (!selectedWordbook.value) return;
 
+  const docRef = doc(db, 'wordbooks', selectedWordbook.value.documentName);
   if (wordDialog.value.isEdit) {
     // 編集モード
     selectedWordbook.value.quizzes[wordDialog.value.editIndex] = { ...editableWord.value };
+    await updateDoc(docRef, { quizzes: arrayUnion(editableWord.value) });
+    await updateDoc(docRef, { quizzes: arrayRemove(removeTargetWord) });
   } else {
     // 追加モード
     selectedWordbook.value.quizzes.push({ ...editableWord.value });
+    await updateDoc(docRef, { quizzes: arrayUnion(editableWord.value) });
   }
-  
-  await saveJson(selectedWordbook.value.path, { quizzes: selectedWordbook.value.quizzes });
+  // await saveDocument(selectedWordbook.value.documentName, { quizzes: selectedWordbook.value.quizzes });
   closeWordDialog();
 };
 
@@ -376,21 +416,21 @@ const openDeleteWordDialog = (word, index) => {
 // --- 削除の確定処理 ---
 const confirmDelete = async () => {
     if (deleteDialog.value.type === 'wordbook') {
-        const index = wordbooks.value.findIndex(wb => wb.path === deleteDialog.value.path);
+        const index = wordbooks.value.findIndex(wb => wb.documentName === deleteDialog.value.documentName);
         if (index !== -1) {
-            if (selectedWordbook.value && selectedWordbook.value.path === deleteDialog.value.path) {
+            if (selectedWordbook.value && selectedWordbook.value.documentName === deleteDialog.value.documentName) {
                 selectedWordbook.value = null;
             }
             wordbooks.value.splice(index, 1);
             // file-list.jsonを更新
-            await saveJson(FILE_LIST_PATH, wordbooks.value);
-            // 該当単語集ファイルを削除する処理も必要（サーバーサイドで実装）
+            await deleteDoc(doc(db, 'wordbookList', deleteDialog.value.documentName));
+            await deleteDoc(doc(db, 'wordbooks', deleteDialog.value.documentName));
         }
     } else if (deleteDialog.value.type === 'word') {
         if (selectedWordbook.value) {
             selectedWordbook.value.quizzes.splice(deleteDialog.value.index, 1);
             // 選択中の単語集ファイルを更新
-            await saveJson(selectedWordbook.value.path, { quizzes: selectedWordbook.value.quizzes });
+            await saveDocument('wordbooks', selectedWordbook.value.documentName, { quizzes: selectedWordbook.value.quizzes });
         }
     }
     deleteDialog.value.show = false;
@@ -424,7 +464,7 @@ const handleFileSelect = (event) => {
 const readFileAsBase64 = (file) => {
   const reader = new FileReader();
   reader.onload = (e) => {
-    editableWord.value.image = e.target.result;
+    editableWord.value.imagePath = e.target.result;
   };
   reader.readAsDataURL(file);
 };
@@ -444,5 +484,22 @@ onMounted(() => {
 .drag-over {
   border: 2px dashed #000;
   background-color: #e0e0e0 !important;
+}
+.thema-color {
+  background-color: #27c9b5;
+  color: #f2f2f2;
+}
+.sub-color {
+  background-color: #696e79;
+  color: #f2f2f2;
+}
+.third-color {
+  background-color: #f2f2f2;
+}
+.floating-btn {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  z-index: 100;
 }
 </style>

@@ -10,7 +10,7 @@
 
         <!-- イラストを表示 -->
         <v-container height="40dvh" class="pa-0 center img-container">
-          <v-img class="img" :src="currentQuiz.image" alt="illust"></v-img>
+          <v-img class="img" :src="currentQuiz.imagePath" alt="illust"></v-img>
         </v-container>
 
         <!-- 単語選択肢 -->
@@ -44,8 +44,11 @@
   <!-- 正解、不正解を表示しボタンを押して次の問題に移れる -->
   <v-container height="20dvh" fluid class="top-line center pa-0 mt-auto" :class="[{ 'correct-bar': isCorrect, 'incorrect-bar': isCorrect == false}, undefined]">
     <v-row style="max-width: 900px;">
-      <v-col cols="auto" class="me-auto">
+      <v-col cols="2">
         <v-img width="60px" height="auto" :src="markImagePointer" alt="mark"></v-img>
+      </v-col>
+      <v-col cols="auto" class="me-auto answer kyokasho-font-b">
+        {{ answer }}
       </v-col>
       <v-col cols="auto">
         <v-btn class="mr-5 main-btn" :class="[{ 'main-btn-incorrect': isCorrect == false }, 'main-btn-correct']" @click="checkAnswer">{{ buttonText }}</v-btn>
@@ -87,8 +90,12 @@
   text-align: center;
   font-size: clamp(16px, 5vw, 25px);
 }
+.answer {
+  font-size: clamp(20px, 6vw, 32px);
+  color: #df1674;
+}
 .top-line {
-  border-top: 3px solid #8f8f8f;
+  border-top: 5px solid #8f8f8f;
   background-color: #ffffff85;
 }
 .correct-bar {
@@ -147,12 +154,14 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useJsonDataStore, useResultDataStore } from '@/stores/dataStore'
+import { useRouter } from 'vue-router'
+import { useWordbookDataStore, useResultDataStore } from '@/stores/dataStore'
+import { db } from '@/firebase'
+import { doc, getDoc } from 'firebase/firestore'
 
-const route = useRoute()
+// const route = useRoute()
 const router = useRouter()
-const jsonStore = useJsonDataStore()
+const wordbookStore = useWordbookDataStore()
 const resultStore = useResultDataStore()
 
 let quizNumberAll // 選んだ単語集に存在する単語全ての数
@@ -167,6 +176,7 @@ const currentQuiz = ref(null) // 現在取り組んでいるクイズのデー�
 
 const isCorrect = ref(undefined)  // 問題に正解しているか、不正解であるか
 const informText = ref('')  // 正解や不正解、警告を知らせるためのテキスト
+const answer = ref('')  // 回答を表示するテキスト
 const buttonText = ref('Check') //表示用ボタンのテキスト
 
 const markImagePointer = ref(undefined)
@@ -186,7 +196,7 @@ const buttons = ref([])  // ボタンの要素データ
 onMounted(() => {
   preloadImage(imageURLs);
   window.addEventListener("resize", resizeText); // ウィンドウリサイズ時に再調整
-  initialize();
+  initQuizzes();
 });
 
 // 単語ボタンの幅を均等にそろえる
@@ -195,23 +205,39 @@ const colSpan = computed(() => {
   return count > 0 ? Math.floor(12 / count) : 12;
 });
 
+// firestoreから任意のクイズのデータを読み取り
+async function loadWordbooks() {
+  informText.value = '単語集を読み込んでいます';
+  const docRef = doc(db, 'wordbooks', wordbookStore.documentName);
+  const docSnapshot = await getDoc(docRef);
+
+  if (docSnapshot.exists()) {
+    quizzes = docSnapshot.data().quizzes;
+    informText.value = undefined;
+  } else {
+    informText.value = '単語集の読み込み中にエラーが発生しました';
+  }
+}
+
 // クイズを始めるための初期化処理
-function initialize() {
+async function initQuizzes() {
   // 時間計測
   startTime = Date.now();
 
-  // クイズデータの初期化
-  quizzes = jsonStore.jsonData.quizzes; // jsonデータの受け取り
-  quizNumberAll = quizzes.length;
-  quizNumber = Number(route.query.number); // 今回解くクイズの数受け取り
-  shuffleQuizzes();
-  currentQuiz.value = quizzes[0];
+  // firestoreから任意の単語集のクイズデータを読み込み
+  await loadWordbooks();
 
+  // クイズデータの初期化
+  quizNumberAll = quizzes.length;
+  quizNumber = wordbookStore.quizNumber; // 今回解くクイズの数受け取り
   if (quizNumberAll < quizNumber) {
     quizNumber = quizNumberAll;
   }
+  shuffleQuizzes(); // シャッフル
+  currentIndex = 0;
+  currentQuiz.value = quizzes[ quizzeIndexs[currentIndex] ];
 
-  resizeText();
+  resizeText(); // 文字のサイズ調整
 }
 
 // 単語をクリックしたときに選択
@@ -252,12 +278,16 @@ function checkAnswer() {
     else {
       isCorrect.value = false
       informText.value = 'あともう少し'
+      answer.value = '正解： ' + currentQuiz.value.words[currentQuiz.value.correctIndex]
       mistakeCount++
       mistakeIndexs.push(quizzeIndexs[currentIndex])
 
       // ★追記: ユーザーが選択した単語をストアに保存★
       const selectedWord = currentQuiz.value.words[selectedWordIndex.value];
       resultStore.addIncorrectWord(selectedWord);
+
+      // 間違えた問題のデータをまるごとストアに保存
+      resultStore.addIncorrectQuizz(currentQuiz.value);
 
       buttonText.value = 'Next'
 
@@ -291,6 +321,7 @@ function checkAnswer() {
     // リセット
     selectedWordIndex.value = null
     informText.value = undefined
+    answer.value = undefined
     buttonText.value = 'Check'
     markImagePointer.value = './image/none-mark.png'
 
@@ -304,7 +335,7 @@ function checkAnswer() {
 // 読み込んだデータをシャッフル
 function shuffleQuizzes() {
   for(let i = 0; i < quizNumberAll; i++){
-    quizzeIndexs[i] = i
+    quizzeIndexs[i] = i;
   }
   for (let i = 0; i < quizNumberAll; i++) {
     // 0~問題数の乱数を取得

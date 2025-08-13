@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // lessons コレクションのルール
+    match /lessons/{lessonId} {
+      // 読み取りは全てのユーザーに許可
+      allow read: if true;
+
+      // 書き込み（作成・更新・削除）は認証済みユーザーのみに許可
+      allow write: if
+        // ユーザーが認証済みであること
+        request.auth != null &&
+
+        // データの基本構造チェック（create, update 操作の場合のみ）
+        (request.method == 'delete' ||
+          (
+            request.resource.data.keys().hasAll(['name', 'sentences', 'analyzedSentences', 'wordColors', 'createdAt']) &&
+
+            // 必須フィールドの型チェック
+            request.resource.data.name is string &&
+            request.resource.data.name.size() > 0 &&
+            request.resource.data.sentences is list &&
+            request.resource.data.analyzedSentences is list &&
+            request.resource.data.wordColors is list &&
+            request.resource.data.createdAt is string
+          )
+        );
+    }
+
+    // wordbookList コレクションのルール
+    match /wordbookList/{wordbookListId} {
+      // 読み取りは全てのユーザーに許可
+      allow read: if true;
+
+      // 書き込み（作成・更新・削除）は認証済みユーザーのみに許可
+      allow write: if request.auth != null;
+    }
+
+    // wordbooks コレクションのルール
+    match /wordbooks/{wordbookId} {
+      // 読み取りはすべてのユーザに許可
+      allow read: if true;
+
+      // 書き込み（作成・更新・削除）は認証済みユーザーのみに許可
+      allow write: if request.auth != null;
+    }
+  }
+}
