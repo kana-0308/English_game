@@ -23,28 +23,28 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { useJsonDataStore, useResultDataStore } from '@/stores/dataStore';
-import { ref, computed } from 'vue';
+import { useResultDataStore } from '@/stores/dataStore';
+import { computed } from 'vue';
 
 const router = useRouter();
 const resultStore = useResultDataStore();
-const jsonStore = useJsonDataStore();
 
 // データストアから間違えた問題のインデックスリストを取得
 const mistakeIndexs = resultStore.mistakeIndexs || [];
 
 // 間違えた問題のデータを整形
 const mistakes = computed(() => {
-  if (!jsonStore.jsonData || mistakeIndexs.length === 0) {
+  if (mistakeIndexs.length === 0) {
     return [];
   }
   return mistakeIndexs.map((index, i) => {
-    const quiz = jsonStore.jsonData.quizzes[index];
+    // const quiz = jsonStore.jsonData.quizzes[index];
+    const quiz = resultStore.incorrectQuizzes[i];
     const correctWord = quiz.words[quiz.correctIndex];
     const incorrectWord = resultStore.incorrectWords[i];
 
     return {
-      image: quiz.image,
+      image: quiz.imagePath,
       correctWord: correctWord,
       incorrectWord: incorrectWord, // 仮の単語
     };

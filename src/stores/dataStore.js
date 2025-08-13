@@ -1,16 +1,18 @@
 // src/stores/dataStore.js
 import { defineStore } from 'pinia'
 
-export const useJsonDataStore = defineStore('jsonData', {
+export const useWordbookDataStore = defineStore('wordbookData', {
   state: () => ({
-    jsonData: null
+    quizNumber: 0,
+    documentName: '',
   }),
   actions: {
-    setJsonData(data) {
-      this.jsonData = data
+    setWordbookData(documentName, quizNumber) {
+      this.documentName = documentName
+      this.quizNumber = quizNumber
     }
   }
-})
+});
 
 export const useResultDataStore = defineStore('resultData', {
   state: () => ({
@@ -18,8 +20,9 @@ export const useResultDataStore = defineStore('resultData', {
     takenTime: 0,
     correctCount: 0,
     mistakeCount: 0,
-    mistakeIndexs: null,
+    mistakeIndexs: [],
     incorrectWords: [],
+    incorrectQuizzes: [],
   }),
   actions: {
     setResultData(score, takenTime, correctCount, mistakeCount, mistakeIndexs) {
@@ -31,6 +34,9 @@ export const useResultDataStore = defineStore('resultData', {
     },
     addIncorrectWord(word){
       this.incorrectWords.push(word);
-    } 
+    },
+    addIncorrectQuizz(quiz) {
+      this.incorrectQuizzes.push(quiz);
+    }
   }
 });
