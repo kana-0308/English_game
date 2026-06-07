@@ -1,5 +1,14 @@
-# 目次
+# 英語学習アプリ
+## デプロイ
+次のリンクから作成したアプリを遊ぶことができます。[https://english-picture-game.web.app/](https://english-picture-game.web.app/)
 
+単語集の作成を行うために、メールアドレスとパスワードは以下のものを使ってログインしてください。
+
+| メールアドレス | パスワード |
+| ---- | ---- |
+| test@gmail.com | test00 |
+
+# 目次
 <details>
 <summary>OPEN</summary>
 
